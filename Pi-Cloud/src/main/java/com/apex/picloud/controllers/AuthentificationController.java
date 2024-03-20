@@ -22,7 +22,6 @@ import java.io.IOException;
 public class AuthentificationController {
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired

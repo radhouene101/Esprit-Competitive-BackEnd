@@ -1,0 +1,46 @@
+package com.apex.picloud.controllers;
+
+import com.apex.picloud.models.Topic;
+import com.apex.picloud.services.TopicService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/forums/topics")
+public class TopicController {
+    @Autowired
+    private TopicService topicService ;
+
+    @PostMapping("/addTopic")
+    public Topic createPost(@RequestBody Topic topic){
+
+        return topicService.createTopic(topic);
+    }
+
+    @GetMapping("/getTopicById/{id}")
+    public ResponseEntity<Topic> getPostById(@PathVariable Long id) {
+        Topic topic= topicService.getTopicById(id);
+        return ResponseEntity.ok(topic);
+    }
+    @GetMapping("/getAllTopics")
+    public ResponseEntity<List<Topic>> getAllTopics(){
+        List<Topic> topics = topicService.getAllTopics();
+        return ResponseEntity.ok(topics);
+    }
+
+    @PutMapping("/updateTopic/{id}")
+    public ResponseEntity<Topic> updateTopic(@PathVariable Long id, @RequestBody Topic topic) {
+        topic.setTopic_id(id);
+        Topic updatedTopic = topicService.updateTopic(topic);
+        return ResponseEntity.ok(updatedTopic);
+    }
+
+    @DeleteMapping("/deleteTopic/{id}")
+    public ResponseEntity<?> deleteTopic(@PathVariable Long id) {
+        topicService.deleteTopic(id);
+        return ResponseEntity.noContent().build();
+    }
+}

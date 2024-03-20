@@ -25,9 +25,9 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/register","/authentication").permitAll()
+                .requestMatchers("/register","/authentication","api/forums/getAllForums","api/forums/addForum","/api/forums/getForumById/{id}","/api/forums/deleteForum/{id}","/api/forums/updateForum/{id}","/api/forums/topics/posts/addPost","api/forums/topics/posts/deletePost/","/api/forums/topics/posts/getAllPosts","/api/forums/topics/posts/getPostById/{id}","/api/forums/topics/posts/updatePost/","/api/forums/topics/addTopic","/api/forums/topics/deleteTopic/{id}","/api/forums/topics/getAllTopics","/api/forums/topics/getTopicById/{id}","/api/forums/topics/updateTopic/{id}").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/**")
+                .authorizeHttpRequests().requestMatchers("/api/**","api/forums/","/api/forum/posts/")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
