@@ -15,7 +15,7 @@ public class SignupController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody SignupRequest signupRequest){
 UserDTO createdUser= authService.createUser(signupRequest);
 if(createdUser==null)
