@@ -19,6 +19,7 @@ public class Post {
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
     private Topic topic;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "created_by_id")
     private User createdBy;

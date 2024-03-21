@@ -34,25 +34,18 @@ public class ForumServiceImpl implements ForumService{
                    }
 
         Forum existingForum = existingForumOptional.get();
-        // Update specific fields if needed (e.g., name, description)
         existingForum.setForum_name(forum.getForum_name());
         existingForum.setDescription(forum.getDescription());
 
-        // Save the updated forum
         forumRepository.save(existingForum);
         return existingForum;
     }
 
     @Override
     public void deleteForum(Long forum_id) {
-        // Check if forum exists before deleting
         Optional<Forum> existingForumOptional = forumRepository.findById(forum_id);
         if (!existingForumOptional.isPresent()) {
         }
-
-        // Consider cascading deletion of associated topics and posts (optional)
-        // Or handle orphaned topics/posts if deletion is not cascaded
-
         forumRepository.deleteById(forum_id);
     }
 }
