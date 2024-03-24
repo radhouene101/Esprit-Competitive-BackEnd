@@ -34,6 +34,9 @@ private JwtRequestFilter requestFilter;
                 .authorizeHttpRequests()
                 .requestMatchers("/register","/authentication").permitAll()
                 .and()
+
+                .authorizeHttpRequests().requestMatchers("/roletest/hello").hasRole("USER").and()
+
                 .authorizeHttpRequests().requestMatchers("/api/**")
                 .authenticated().and()
                 .sessionManagement()
