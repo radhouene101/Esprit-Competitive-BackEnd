@@ -32,10 +32,10 @@ private JwtRequestFilter requestFilter;
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/register","/authentication").permitAll()
+                .requestMatchers("/register","/authentication","/forgot-password","/set-password").permitAll()
                 .and()
 
-                .authorizeHttpRequests().requestMatchers("/roletest/hello").hasRole("USER").and()
+                .authorizeHttpRequests().requestMatchers("/roletest/hello","/forgot-password").hasRole("USER").and()
 
                 .authorizeHttpRequests().requestMatchers("/api/**")
                 .authenticated().and()
