@@ -14,19 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/roletest")
 public class RoleTestController {
-@Autowired
+
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
-
-private UserRepository userRepository;
-
+    private UserRepository userRepository;
     @GetMapping("/hello")
-
     public String hello(){
         UserDetails usersearch = userDetailsService.getAuthenticatedUserDetails();
-String email=usersearch.getUsername();
+        String email=usersearch.getUsername();
         User user = userRepository.findFirstByEmail(email);
 
-        return "hello from user"+user.getName();
+        return "hello from user"+user.getName()+user.getEmail();
     }
 }

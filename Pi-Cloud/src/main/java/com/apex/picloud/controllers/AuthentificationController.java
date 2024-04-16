@@ -6,6 +6,7 @@ import com.apex.picloud.services.jwt.UserDetailsServiceImpl;
 import com.apex.picloud.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -28,6 +29,7 @@ public class AuthentificationController {
     @Autowired
     private JwtUtil jwtUtil;
 @PostMapping("/authentication")
+@SendTo("/user/public")
     public AuthentificationResponse createAuthentificationToken(@RequestBody AuthentificationRequest authentificationRequest, HttpServletResponse response)throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
 try{
 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authentificationRequest.getEmail(),authentificationRequest.getPassword()));
@@ -38,7 +40,9 @@ authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authe
     return null;
 
 }
+//Auth success
 final UserDetails userDetails = userDetailsService.loadUserByUsername(authentificationRequest.getEmail());
+
 final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 return new AuthentificationResponse(jwt);
 

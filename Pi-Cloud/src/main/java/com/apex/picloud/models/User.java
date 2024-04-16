@@ -2,6 +2,8 @@ package com.apex.picloud.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name="users")
 @Data
+@Getter
+@Setter
 public class User {
 
 
@@ -21,6 +25,9 @@ public class User {
      private String name;
      private String email;
      private String password;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 
     public Long getId() {
         return id;

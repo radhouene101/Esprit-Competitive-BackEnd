@@ -1,6 +1,7 @@
 package com.apex.picloud.services.jwt;
 
 import com.apex.picloud.models.Role;
+import com.apex.picloud.models.Status;
 import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findFirstByEmail(email);
+        //Update status of user to Online when authentication
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
         if(user==null){
             throw new UsernameNotFoundException("user not found",null);
         }
