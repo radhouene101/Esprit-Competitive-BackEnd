@@ -22,9 +22,8 @@ public class HelloController {
         //UserDetails user=  userDetailsService.loadUserByUsername( userDetails.getUsername());
         //Récupérer les détails de l'utilisateur connecté
         //String username = userDetails.getUsername(); // Nom d'utilisateur
-        return new HelloResponse("Hello from JWT Authorization. Username: "
-                + user.getUsername()
-                +user.getPassword()
+        return new HelloResponse(
+                user.getUsername()+","
 
         );
     }
