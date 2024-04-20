@@ -1,8 +1,8 @@
 package com.apex.picloud.controllers;
 
+import com.apex.picloud.dtos.CommentDTO;
 import com.apex.picloud.models.Comment;
-import com.apex.picloud.services.CommentService;
-import com.apex.picloud.services.ForumService;
+import com.apex.picloud.services.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,8 @@ public class CommentController {
     private CommentService commentService ;
 
     @PostMapping("/addComment")
-    public Comment createComment(@RequestBody Comment comment){
-        return commentService.createComment(comment);
+    public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO comment){
+        return ResponseEntity.ok(commentService.createComment(comment));
     }
     @GetMapping("/getCommentById/{id}")
     public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
@@ -31,10 +31,10 @@ public class CommentController {
     }
 
     @PutMapping("/updateComment/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment comment) {
-        comment.setComment_id(id);
-        Comment updatedComment = commentService.updateComment(comment);
-        return ResponseEntity.ok(updatedComment);
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody CommentDTO dto) {
+        dto.setComment_id(id);
+        CommentDTO updatedCommentDTO = commentService.updateComment(dto);
+        return ResponseEntity.ok(updatedCommentDTO);
     }
 
     @DeleteMapping("/deleteComment/{id}")
@@ -42,4 +42,31 @@ public class CommentController {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }
+    @PostMapping("/addNestedComment/{parentId}")
+    public Comment addNestedComment(@PathVariable Long parentId, @RequestBody Comment nestedComment) {
+        return commentService.addNestedComment(parentId, nestedComment);
+    }
+
+    // Endpoint for retrieving comments along with nested comments
+    @GetMapping("/getCommentWithNested/{id}")
+    public ResponseEntity<Comment> getCommentWithNested(@PathVariable Long id) {
+        Comment comment = commentService.getCommentWithNested(id);
+        return ResponseEntity.ok(comment);
+    }
+
+    // Endpoint for updating nested comments
+    @PutMapping("/updateNestedComment/{parentId}/{nestedId}")
+    public ResponseEntity<Comment> updateNestedComment(@PathVariable Long parentId, @PathVariable Long nestedId, @RequestBody Comment nestedComment) {
+        nestedComment.setComment_id(nestedId);
+        Comment updatedComment = commentService.updateNestedComment(parentId, nestedComment);
+        return ResponseEntity.ok(updatedComment);
+    }
+
+    // Endpoint for deleting nested comments
+    @DeleteMapping("/deleteNestedComment/{parentId}/{nestedId}")
+    public ResponseEntity<?> deleteNestedComment(@PathVariable Long parentId, @PathVariable Long nestedId) {
+        commentService.deleteNestedComment(parentId, nestedId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

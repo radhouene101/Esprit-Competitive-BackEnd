@@ -1,7 +1,8 @@
 package com.apex.picloud.controllers;
 
+import com.apex.picloud.dtos.TopicDTO;
 import com.apex.picloud.models.Topic;
-import com.apex.picloud.services.TopicService;
+import com.apex.picloud.services.topic.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,9 @@ public class TopicController {
     private TopicService topicService ;
 
     @PostMapping("/addTopic")
-    public Topic createPost(@RequestBody Topic topic){
+    public ResponseEntity<TopicDTO> createPost(@RequestBody TopicDTO topic){
 
-        return topicService.createTopic(topic);
+        return ResponseEntity.ok(topicService.createTopic(topic));
     }
 
     @GetMapping("/getTopicById/{id}")
@@ -32,10 +33,10 @@ public class TopicController {
     }
 
     @PutMapping("/updateTopic/{id}")
-    public ResponseEntity<Topic> updateTopic(@PathVariable Long id, @RequestBody Topic topic) {
-        topic.setTopic_id(id);
-        Topic updatedTopic = topicService.updateTopic(topic);
-        return ResponseEntity.ok(updatedTopic);
+    public ResponseEntity<TopicDTO> updateTopic(@PathVariable Long id, @RequestBody TopicDTO dto) {
+        dto.setTopic_id(id);
+        TopicDTO updatedTopicDTO = topicService.updateTopic(dto);
+        return ResponseEntity.ok(updatedTopicDTO);
     }
 
     @DeleteMapping("/deleteTopic/{id}")
