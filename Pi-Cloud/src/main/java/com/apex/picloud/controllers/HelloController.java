@@ -23,7 +23,7 @@ public class HelloController {
         //Récupérer les détails de l'utilisateur connecté
         //String username = userDetails.getUsername(); // Nom d'utilisateur
         return new HelloResponse(
-                user.getUsername()+","
+                user.getUsername()
 
         );
     }
