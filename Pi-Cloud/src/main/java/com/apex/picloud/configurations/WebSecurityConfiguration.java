@@ -33,7 +33,7 @@ private JwtRequestFilter requestFilter;
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(
+                .requestMatchers("user/**",
                         "/register",
                         "/authentication",
                         "/forgot-password",
