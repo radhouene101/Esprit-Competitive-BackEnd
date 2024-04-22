@@ -25,12 +25,12 @@ public class RoleTestController {
     @Autowired
     private UserService userService;
     @GetMapping("/hello")
-    public String hello(){
+    public User hello(){
         UserDetails usersearch = userDetailsService.getAuthenticatedUserDetails();
         String email=usersearch.getUsername();
         User user = userRepository.findFirstByEmail(email);
 
-        return "user infos:"+"\n"+user.getName()+"\n"+user.getEmail()+"\n"+user.getPhone();
+        return user;
     }
 
 
