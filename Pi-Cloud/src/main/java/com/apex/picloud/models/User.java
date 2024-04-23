@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +17,7 @@ import java.util.Set;
 @Data
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails{
 
 
     public User() {
@@ -25,6 +29,11 @@ public class User {
      private String name;
      private String email;
      private String password;
+     private boolean active;
+     private String otp;
+     private LocalDateTime OtpGeneratedTime;
+
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -53,8 +62,38 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 
     public void setPassword(String password) {
