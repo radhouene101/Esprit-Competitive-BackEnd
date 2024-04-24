@@ -2,6 +2,8 @@ package com.apex.picloud.controllers;
 
 import com.apex.picloud.dtos.AuthentificationRequest;
 import com.apex.picloud.dtos.AuthentificationResponse;
+import com.apex.picloud.models.User;
+import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.jwt.UserDetailsServiceImpl;
 import com.apex.picloud.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +25,8 @@ import java.io.IOException;
 public class AuthentificationController {
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
@@ -42,7 +45,12 @@ authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authe
 }
 //Auth success
 final UserDetails userDetails = userDetailsService.loadUserByUsername(authentificationRequest.getEmail());
-
+    String email=userDetails.getUsername();
+    User user = userRepository.findFirstByEmail(email);
+    if (!user.isActive()) {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "User account is inactive. Please contact support.");
+        return null;
+    }
 final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 return new AuthentificationResponse(jwt);
 
