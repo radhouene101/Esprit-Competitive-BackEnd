@@ -15,6 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -31,14 +36,17 @@ private JwtRequestFilter requestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
-        return http.csrf().disable()
+         http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("user/**",
+                .requestMatchers(
+                        "/**",
+                        "/user/**",
                         "/register",
                         "/authentication",
                         "/forgot-password",
                         "/set-password",
                         "/ws",
+                        "/ws/info",
                         // resources for swagger to work properly
                         "/v2/api-docs",
                         "/v3/api-docs",
@@ -61,12 +69,22 @@ private JwtRequestFilter requestFilter;
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)//houni staamlna token
-
-                .build();
+                ;
+        return http.httpBasic().and().build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
