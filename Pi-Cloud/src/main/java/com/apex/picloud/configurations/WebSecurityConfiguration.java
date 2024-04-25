@@ -43,8 +43,9 @@ private JwtRequestFilter requestFilter;
                         "/authentication",
                         "/forgot-password",
                         "/set-password",
-                        "/ws",
+                        "/ws/**",
                         "/ws/info",
+                        "/messages/**",
                         // resources for swagger to work properly
                         "/v2/api-docs",
                         "/v3/api-docs",
