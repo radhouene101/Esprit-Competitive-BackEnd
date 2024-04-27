@@ -6,12 +6,14 @@ import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.PostRepository;
 import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.contentModeration.ContentModerationService;
-import com.apex.picloud.services.post.PostService;
 import com.apex.picloud.validator.ObjectsValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +30,27 @@ public class PostServiceImpl implements PostService {
 
 
 
-    @Override
-    public PostDTO createPost(PostDTO dto) {
+     @Override
+    public PostDTO createPost(PostDTO dto ) throws MessagingException {
         validator.validate(dto) ;
+
+        String content = dto.getContent();
+        boolean containsForbiddenWords = moderationService.containsForbiddenWords(content);
+         if (containsForbiddenWords) {
+             content = moderationService.replaceForbiddenWords(content);
+             dto.setContent(content);
+         }
+
         Post post = PostDTO.toEntity(dto);
          postRepository.save(post);
+
+         if (containsForbiddenWords) {
+             moderationService.checkUserBadWordCount(dto.getCreatedBy());
+         }
+
          return PostDTO.fromEntity(post);
     }
+
 
     @Override
     public List<Post> getAllPosts() {
@@ -72,4 +88,34 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(post_id);
 
     }
+    public void likePost(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null) {
+            int current=0;
+            if(post.getLikesCount()!=null)
+                current=post.getLikesCount();
+            post.setLikesCount(current + 1);
+            postRepository.save(post);
+        }
+    }
+
+    public void dislikePost(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null) {
+            int current= 0;
+            if(post.getDislikesCount()!=null)
+                current=post.getDislikesCount();
+            post.setDislikesCount(current + 1 );
+            postRepository.save(post);
+        }
+    }
+    public void pinMostLikedPost() {
+        postRepository.pinMostLikedPost();
+    }
+
+    public Post getPinnedPost() {
+        return postRepository.findPinnedPost();
+    }
+
+
 }

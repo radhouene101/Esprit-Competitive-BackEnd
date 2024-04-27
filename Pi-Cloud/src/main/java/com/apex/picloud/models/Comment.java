@@ -30,7 +30,8 @@ public class Comment {
 
     @ManyToOne(optional = false)
     private Post post;
-
+    private Integer likes_count ;
+    private Integer dislikes_count ;
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Comment parentComment ;
     @OneToMany(cascade = CascadeType.ALL)

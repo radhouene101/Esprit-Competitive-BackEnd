@@ -30,6 +30,29 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
     private Integer voteCount;
+    private Integer LikesCount = 0 ;
+    private Integer DislikesCount = 0 ;
+    private boolean pinned ;
+
+    public Boolean getPinned() {
+        return pinned;
+    }
+
+    public void setPinned(Boolean pinned) {
+        this.pinned = pinned;
+    }
+
+
+
+    public void setLikesCount(Integer likesCount) {
+        LikesCount = likesCount;
+    }
+
+
+
+    public void setDislikesCount(Integer dislikesCount) {
+        DislikesCount = dislikesCount;
+    }
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "topic_id" , nullable = true)
@@ -50,6 +73,9 @@ public class Post {
     public Post() {
         // This constructor can be empty or you can initialize default values if needed
     }
+
+
+
     public Post(String content, Integer voteCount, Topic topic, User user, Date createdAt, List<Comment> comments, Date lastUpdateDate) {
         this.content = content;
         this.voteCount = voteCount;
