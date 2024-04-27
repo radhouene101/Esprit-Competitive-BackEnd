@@ -27,6 +27,17 @@ services:
       - spring-demo
     depends_on:
       - db
+  frontend-api:
+    container_name: frontend
+    image: oussamaayari2020/picloud:frontend
+    ports:
+      - '4200:4200'
+    expose:
+      - '4200'
+    networks:
+      - spring-demo
+    depends_on:
+      - backend-api
 volumes:
   my-db:
     driver: local
