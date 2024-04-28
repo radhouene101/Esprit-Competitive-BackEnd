@@ -17,11 +17,11 @@ public class SignupController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody SignupRequest signupRequest){
-UserDTO createdUser= authService.createUser(signupRequest);
-if(createdUser==null)
-    return new ResponseEntity<>("user n est pas cree,try later", HttpStatus.BAD_REQUEST);
+        UserDTO createdUser= authService.createUser(signupRequest);
+        if(createdUser==null)
+            return new ResponseEntity<>("user n est pas cree,try later", HttpStatus.BAD_REQUEST);
 
 
-return new ResponseEntity<>(createdUser,HttpStatus.CREATED);
+        return new ResponseEntity<>(createdUser,HttpStatus.CREATED);
     }
 }

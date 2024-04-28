@@ -7,6 +7,7 @@ import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.utils.EmailUtil;
 import com.apex.picloud.utils.OptUtil;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,12 +56,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public String register(SignupRequest registerDto) {
+    public String register(SignupRequest registerDto) throws IllegalAccessException {
         String otp = otpUtil.generateOtp();
         try {
             emailUtil.sendOtpEmail(registerDto.getEmail(), otp);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
+        }
+        if(userRepository.findByEmail(registerDto.getEmail()).get().getEmail()!=null){
+            throw  new IllegalAccessException("user with the provided email already exist");
         }
         User user = new User();
         user.setName(registerDto.getName());
