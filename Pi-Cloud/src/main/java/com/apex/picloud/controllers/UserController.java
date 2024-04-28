@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody SignupRequest registerDto) {
+    public ResponseEntity<String> register(@RequestBody SignupRequest registerDto) throws IllegalAccessException {
         return new ResponseEntity<>(userService.register(registerDto), HttpStatus.OK);
     }
 

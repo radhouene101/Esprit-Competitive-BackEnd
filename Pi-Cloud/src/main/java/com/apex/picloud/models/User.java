@@ -1,22 +1,23 @@
 package com.apex.picloud.models;
 
+import com.apex.picloud.entities.Projects;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="users")
-@Data
+@Table(name ="users",uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class User implements UserDetails{
 
 
@@ -27,11 +28,15 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
      private String name;
+
+     @Column(unique = true)
      private String email;
      private String password;
      private boolean active;
      private String otp;
      private LocalDateTime OtpGeneratedTime;
+    @OneToMany(mappedBy = "user")
+    private List<Projects> listprojects;
 
 
     @Enumerated(EnumType.STRING)

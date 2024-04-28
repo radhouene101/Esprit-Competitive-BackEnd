@@ -7,6 +7,7 @@ import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.utils.EmailUtil;
 import com.apex.picloud.utils.OptUtil;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class AuthServiceImp implements AuthService{
             emailUtil.sendOtpEmail(signupRequest.getEmail(), otp);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
+        }
+        if(userRepository.findByEmail(signupRequest.getEmail()).get().getEmail()!=null){
+            throw new EntityExistsException("a user with the provided email already exist");
         }
 
         User user=new User();
