@@ -25,14 +25,14 @@ public class AuthServiceImp implements AuthService{
 
     @Override
     public UserDTO createUser(SignupRequest signupRequest) {
+        if(userRepository.findByEmail(signupRequest.getEmail()).get().getEmail()!=null){
+            throw new EntityExistsException("a user with the provided email already exist");
+        }
         String otp = otpUtil.generateOtp();
         try {
             emailUtil.sendOtpEmail(signupRequest.getEmail(), otp);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
-        }
-        if(userRepository.findByEmail(signupRequest.getEmail()).get().getEmail()!=null){
-            throw new EntityExistsException("a user with the provided email already exist");
         }
 
         User user=new User();

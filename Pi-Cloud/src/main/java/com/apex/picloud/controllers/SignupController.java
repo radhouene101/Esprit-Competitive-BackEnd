@@ -20,8 +20,6 @@ public class SignupController {
         UserDTO createdUser= authService.createUser(signupRequest);
         if(createdUser==null)
             return new ResponseEntity<>("user n est pas cree,try later", HttpStatus.BAD_REQUEST);
-
-
         return new ResponseEntity<>(createdUser,HttpStatus.CREATED);
     }
 }
