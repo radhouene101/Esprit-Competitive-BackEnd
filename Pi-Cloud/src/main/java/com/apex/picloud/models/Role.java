@@ -1,9 +1,9 @@
 package com.apex.picloud.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Role {
@@ -12,6 +12,10 @@ public class Role {
     private Long id;
 
     private String name;
+
+    @ManyToMany()
+    private Set<Role> roles = new HashSet<>();
+
     public Role() {
 
     }
