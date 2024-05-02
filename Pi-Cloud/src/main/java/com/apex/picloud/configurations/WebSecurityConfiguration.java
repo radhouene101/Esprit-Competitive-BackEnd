@@ -67,7 +67,8 @@ private JwtRequestFilter requestFilter;
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)//houni staamlna token
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+         //houni staamlna token
                 ;
         return http.httpBasic().and().build();
     }
