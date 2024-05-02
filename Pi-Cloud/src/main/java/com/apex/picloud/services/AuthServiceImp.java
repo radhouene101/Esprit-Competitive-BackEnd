@@ -35,11 +35,17 @@ public class AuthServiceImp implements AuthService{
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
         }
+
 //        User compareWith = userRepository.findByEmail(signupRequest.getEmail()).get();
 //        if(compareWith.getEmail().equals(signupRequest.getEmail())){
 //            log(userRepository.findByEmail(signupRequest.getEmail()).get().getEmail());
 //            throw new EntityExistsException("a user with the provided email already exist");
 //        }
+
+        /*if(userRepository.findByEmail(signupRequest.getEmail()).get().getEmail()!=null){
+            throw new EntityExistsException("a user with the provided email already exist");
+        }*/
+
 
         User user=new User();
         user.setOtp(otp);
