@@ -3,6 +3,7 @@ package com.apex.picloud.services;
 import com.apex.picloud.dtos.SignupRequest;
 import com.apex.picloud.dtos.UserDTO;
 import com.apex.picloud.models.Role;
+import com.apex.picloud.models.Status;
 import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.RoleRepository;
 import com.apex.picloud.repositories.UserRepository;
@@ -64,6 +65,7 @@ public class AuthServiceImp implements AuthService{
         user.setName(signupRequest.getName());
         user.setPhone(signupRequest.getPhone());
         user.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
+        user.setStatus(Status.OFFLINE);
         User createdUser = userRepository.save(user);
         roleService.affectRoleToUser(role.getId(),user.getId());
         UserDTO userDTO=new UserDTO();

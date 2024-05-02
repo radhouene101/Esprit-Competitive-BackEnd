@@ -4,6 +4,7 @@ import com.apex.picloud.dtos.AuthentificationRequest;
 import com.apex.picloud.dtos.AuthentificationResponse;
 import com.apex.picloud.dtos.SignupRequest;
 import com.apex.picloud.dtos.UserDTO;
+import com.apex.picloud.models.Role;
 import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.AuthService;
@@ -42,6 +43,7 @@ public class UserController {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtUtil jwtUtil;
+
 
 
     @GetMapping("/all")

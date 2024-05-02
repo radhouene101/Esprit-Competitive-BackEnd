@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class RoleService {
+public class RoleService implements IRoleService{
 
     @Autowired
     RoleRepository roleRepository;
@@ -30,6 +30,11 @@ public class RoleService {
         return savedRoleDTO;
     }
 
+    @Override
+    public RoleDTO getRoleById(Long id) {
+        return null;
+    }
+
     public void  DeleteRole(Long id){
         roleRepository.deleteById(id);
 
@@ -40,6 +45,25 @@ public class RoleService {
         roleRepository.save(role);
         return roleDTO;
 
+    }
+    public boolean roleExists(String roleName) {
+        List<Role> allRoles = roleRepository.findAll();
+        for (Role role : allRoles) {
+            if (role.getName().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteRole(Long id) {
+
+    }
+
+    @Override
+    public List<Role> getallRoles() {
+        return roleRepository.findAll();
     }
 
     public List<RoleDTO> showAll() {

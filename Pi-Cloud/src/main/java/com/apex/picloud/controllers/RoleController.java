@@ -1,9 +1,11 @@
 package com.apex.picloud.controllers;
 
 import com.apex.picloud.dtos.RoleDTO;
+import com.apex.picloud.models.Role;
 import com.apex.picloud.models.User;
 import com.apex.picloud.services.IRoleService;
 import com.apex.picloud.services.RoleService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +38,24 @@ public class RoleController {
     @PostMapping("/affect-role-to-user/{userId}/{roleId}")
     public void affectRoleToUser(@PathVariable Long userId , @PathVariable Long roleId){
         roleService.affectRoleToUser(roleId,userId);
+    }
+    @GetMapping("/getallRoles")
+    public List<Role> getallRoles(){
+        return roleService.getallRoles();
+    }
+
+    @PostConstruct
+    public void initializeRoles() {
+        if (!roleService.roleExists("USER")) {
+            RoleDTO userRole = new RoleDTO();
+            userRole.setName("USER");
+            roleService.createRole(userRole);
+        }
+        if (!roleService.roleExists("ADMIN")) {
+            RoleDTO adminRole = new RoleDTO();
+            adminRole.setName("ADMIN");
+            roleService.createRole(adminRole);
+        }
     }
 
 }

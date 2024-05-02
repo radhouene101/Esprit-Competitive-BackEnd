@@ -2,7 +2,9 @@ package com.apex.picloud.services;
 
 import com.apex.picloud.dtos.AuthentificationRequest;
 import com.apex.picloud.dtos.SignupRequest;
+import com.apex.picloud.models.Role;
 import com.apex.picloud.models.User;
+import com.apex.picloud.repositories.RoleRepository;
 import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.utils.EmailUtil;
 import com.apex.picloud.utils.OptUtil;
@@ -26,6 +28,9 @@ public class UserService {
     private EmailUtil emailUtil;
     @Autowired
     private OptUtil otpUtil;
+    @Autowired
+    RoleRepository roleRepository;
+
 
     public String forgotPassword(String email) {
         User user = userRepository.findFirstByEmail(email);
@@ -114,5 +119,7 @@ public class UserService {
         }
         return "Login successful";
     }
+
+
 
 }
