@@ -2,6 +2,7 @@ package com.apex.picloud.dtos;
 
 import com.apex.picloud.models.Comment;
 import com.apex.picloud.models.Forum;
+import com.apex.picloud.models.Post;
 import com.apex.picloud.models.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.support.ApplicationObjectSupport;
 
 @Getter
 @Setter
@@ -19,6 +21,7 @@ public class CommentDTO {
     private Long comment_id;
     private String content ;
     private User createdBy;
+    private Post post ;
 
 
 
@@ -28,6 +31,7 @@ public class CommentDTO {
                 .comment_id(comment.getComment_id())
                 .content(comment.getContent())
                 .createdBy(comment.getCreatedBy())
+                .post(comment.getPost())
                 .build() ;
     }
 
@@ -37,6 +41,7 @@ public class CommentDTO {
                 .comment_id(comment.getComment_id())
                 .content(comment.getContent())
                 .createdBy(comment.getCreatedBy())
+                .post(comment.getPost())
                 .build() ;
     }
 

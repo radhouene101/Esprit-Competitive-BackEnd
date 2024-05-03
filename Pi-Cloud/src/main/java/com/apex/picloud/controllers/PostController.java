@@ -9,14 +9,18 @@ import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.contentModeration.ContentModerationService;
 import com.apex.picloud.services.post.ContentValidationException;
 import com.apex.picloud.services.post.PostService;
+import com.apex.picloud.services.post.DiscordNotifier;
+
 import lombok.AllArgsConstructor;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -30,13 +34,15 @@ public class PostController {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private ContentModerationService moderationService;
+    private ContentModerationService moderationService ;
     @Autowired
     private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
-    @PostMapping("/addPost")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO post) throws MessagingException {
+    private DiscordNotifier discordNotifier;
+
+   /* @PostMapping("/addPost")
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO post) throws MessagingException{
 
         if (moderationService.containsForbiddenWords(post.getContent())) {
             User user = post.getCreatedBy(); // Retrieve the User object from the post
@@ -48,6 +54,42 @@ public class PostController {
         }
         PostDTO savedPost = postService.createPost(post);
         return ResponseEntity.ok(savedPost);
+    }*/
+   @PostMapping("/addPost")
+   public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO post) throws MessagingException {
+       String originalContent = post.getContent();
+       String sanitizedContent = moderationService.replaceForbiddenWords(post.getContent());
+       post.setContent(sanitizedContent);
+       if (moderationService.containsForbiddenWords(sanitizedContent)) {
+           User user = post.getCreatedBy();
+           if (user != null) {
+               logger.info("User object retrieved: {}", user);
+               moderationService.checkUserBadWordCount(user);
+               logger.info("Bad word count after increment: {}", user.getBadWordCount());
+           }
+           throw new ContentValidationException("Post contains forbidden words.");
+       }
+       PostDTO savedPost = postService.createPost(post);
+
+       if (!originalContent.equals(sanitizedContent)) {
+           User user = post.getCreatedBy();
+           if (user != null) {
+               logger.info("User object retrieved: {}", user);
+               moderationService.checkUserBadWordCount(user);
+               logger.info("Bad word count after increment: {}", user.getBadWordCount());
+           }
+       }
+       return ResponseEntity.ok(savedPost);
+   }
+
+    @PostMapping("/posts/{postId}/shareToDiscord")
+    public void sharePostToDiscord(@PathVariable("postId") Long postId) throws JSONException {
+        Post post = postService.getPostById(postId);
+        if (post != null) {
+            discordNotifier.sharePostToDiscord(post);
+        } else {
+            // Handle case where post with given ID is not found
+        }
     }
 
     @GetMapping("/getPostById/{id}")
@@ -56,9 +98,8 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
     @GetMapping("/getAllPosts")
-    public ResponseEntity<List<Post>> getAllPosts(){
-        List<Post> posts = postService.getAllPosts();
-        return ResponseEntity.ok(posts);
+    public List<Post> getAllPosts(){
+        return postService.getAllPosts();
     }
 
     @PutMapping("/updatePost/{id}")

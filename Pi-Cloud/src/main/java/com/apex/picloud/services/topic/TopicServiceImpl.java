@@ -70,6 +70,12 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    public List<Topic> getAllTopicByForumId(Long forum_id) {
+        return topicRepository.findAllByForumId(forum_id);
+    }
+
+
+    @Override
     public List<Topic> getAllTopics() {
         return topicRepository.findAll();}
 }

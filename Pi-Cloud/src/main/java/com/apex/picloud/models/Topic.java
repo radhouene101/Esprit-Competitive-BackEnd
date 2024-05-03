@@ -11,12 +11,12 @@ import java.util.List;
 
 @Entity
 @Table(name="topics")
-@Data
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,32 +27,24 @@ public class Topic {
     @Column(nullable = false)
     private String title;
 
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "forum_id")
     private Forum forum;
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "createdBy",nullable = false)
     private User createdBy;
 
-
     @Column(nullable = false)
-    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column
-    private Date lastUpdateDate;
 
     @Column
     private Boolean closed;
 
-
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post_id", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Post> posts;
 
-    public Topic() {
 
-    }
 }

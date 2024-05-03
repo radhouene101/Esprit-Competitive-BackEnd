@@ -12,6 +12,7 @@ public interface TopicService {
     Topic getTopicById(Long topic_id);
     TopicDTO updateTopic(TopicDTO topic);
     void deleteTopic(Long topic_id);
+    List<Topic> getAllTopicByForumId(Long forum_id);
 
     List<Topic> getAllTopics();
 }

@@ -20,7 +20,10 @@ public class TopicController {
 
         return ResponseEntity.ok(topicService.createTopic(topic));
     }
-
+    @GetMapping("/{forum_id}")
+    public List<Topic> getAllTopicsByForumId(@PathVariable Long forum_id) {
+        return topicService.getAllTopicByForumId(forum_id);
+    }
     @GetMapping("/getTopicById/{id}")
     public ResponseEntity<Topic> getPostById(@PathVariable Long id) {
         Topic topic= topicService.getTopicById(id);

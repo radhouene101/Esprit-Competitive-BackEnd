@@ -2,18 +2,14 @@ package com.apex.picloud.services.post;
 
 import com.apex.picloud.dtos.PostDTO;
 import com.apex.picloud.models.Post;
-import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.PostRepository;
 import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.contentModeration.ContentModerationService;
 import com.apex.picloud.validator.ObjectsValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +27,7 @@ public class PostServiceImpl implements PostService {
 
 
      @Override
-    public PostDTO createPost(PostDTO dto ) throws MessagingException {
+    public PostDTO createPost(PostDTO dto ) {
         validator.validate(dto) ;
 
         String content = dto.getContent();
@@ -54,6 +50,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAllPosts() {
+        System.out.println(postRepository.findAll());
         return postRepository.findAll();
     }
 
@@ -69,7 +66,7 @@ public class PostServiceImpl implements PostService {
         if (existingPostOptional.isPresent()) {
             Post existingPost = existingPostOptional.get();
             existingPost.setContent(dto.getContent());
-            existingPost.setUser(dto.getCreatedBy());
+            existingPost.setCreatedBy(dto.getCreatedBy());
             existingPost = postRepository.save(existingPost);
             return PostDTO.fromEntity(existingPost);
         } else {

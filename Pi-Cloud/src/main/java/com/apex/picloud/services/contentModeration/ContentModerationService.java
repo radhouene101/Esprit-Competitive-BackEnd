@@ -9,9 +9,9 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 @Service
 public class ContentModerationService implements IContentModerationService{
@@ -75,14 +76,17 @@ public class ContentModerationService implements IContentModerationService{
     }
 
     public String replaceForbiddenWords(String text) {
-        String[] words = text.split("\\s+");
-        for (int i = 0; i < words.length; i++) {
-            if (forbiddenWords.contains(words[i].toLowerCase())) {
-                int wordLength = words[i].length();
-                words[i] = "*".repeat(wordLength);
-            }
+        for (String word : forbiddenWords) {
+            // Create a regex pattern to match the word (case insensitive)
+            String regex = "(?i)" + Pattern.quote(word);
+
+            // Replace all occurrences of the word with asterisks of the same length
+            text = text.replaceAll(regex, "*".repeat(word.length()));
         }
-        return String.join(" ", words);    }
+        return text;
+    }
+
+
     public void checkUserBadWordCount(User user) throws MessagingException {
         logger.info("User data before incrementation: {}", user);
 
@@ -97,33 +101,15 @@ public class ContentModerationService implements IContentModerationService{
 
         logger.info("Incremented bad word count: {}", wordCount);
 
-      /*  if (wordCount == 3) {
+        if (wordCount == 3) {
             String userEmail = currentUser.getEmail();
 
             String subject = "Warning: Excessive use of forbidden words";
-            String body = "You have used forbidden words excessively. Please review your language usage.";
-            try {
-                emailService.sendEmail(userEmail, subject, body);
-                logger.info("Email notification sent successfully to user: {}", userEmail);
-            } catch (MessagingException e) {
-                logger.error("Failed to send email notification: {}", e.getMessage());
-            }
-        }*/
-        if (wordCount == 3) {
-            // Replace userEmail with your Mailtrap inbox email address
-            String mailtrapInbox = "from@example.com";
-
-            String subject = "Warning: Excessive use of forbidden words";
-            String body = "You have used forbidden words excessively. Please review your language usage.";
-            try {
-                // Send email to Mailtrap inbox
-                emailService.sendEmail(mailtrapInbox, subject, body);
-                logger.info("Email notification sent successfully to Mailtrap inbox: {}", mailtrapInbox);
-            } catch (MessagingException e) {
-                logger.error("Failed to send email notification: {}", e.getMessage());
-            }
+            String body = "You have used forbidden words excessively. Please review your language usage. If this behavior persits you will be banned !";
+            // Send email to the current user
+            emailService.sendEmail(userEmail, subject, body);
+            logger.info("Email notification sent successfully to user: {}", userEmail);
         }
-
         else if (wordCount >= 5) {
             banUser(currentUser);
         }
@@ -136,17 +122,19 @@ public class ContentModerationService implements IContentModerationService{
 
 
     private void banUser(User user) throws MessagingException {
-        String mailtrapInbox = "from@example.com";
-        String subject = "You have been banned !";
-        String body = "Your account has been banned for a week for the use of bad words ! ";
+        String subject = "You have been banned!";
+        String body = "Your account has been banned for a week for the use of bad words!";
+        User currentUser = userRepository.findById(user.getId()).orElse(null);
 
-        if (user != null) {
-            user.setBanned(true);
-            user.setBanStartTime(LocalDateTime.now());
-            userRepository.save(user);
+        if (currentUser != null) {
+            currentUser.setBanned(true);
+            currentUser.setBanStartTime(LocalDateTime.now());
+            userRepository.save(currentUser);
+
+            // Send ban notification email to the current user's email address
+            emailService.sendEmail(currentUser.getEmail(), subject, body);
+            logger.info("Banning email notification sent successfully to user: {}", currentUser.getEmail());
         }
-        emailService.sendEmail(mailtrapInbox, subject, body);
-        logger.info("Banning email notification sent successfully to Mailtrap inbox: {}", mailtrapInbox);
     }
     public void performAction(User currentUser , ActionType actionType) {
         if (currentUser == null) {
@@ -172,5 +160,4 @@ public class ContentModerationService implements IContentModerationService{
     }
 
 }
-
 

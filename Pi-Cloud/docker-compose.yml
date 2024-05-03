@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: competitivex
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - spring-demo
+  backend-api:
+    container_name: backend
+    image: backend/backend:1.0.0
+    ports:
+      - '8083:8083'
+    expose:
+      - '8083'
+    networks:
+      - spring-demo
+    depends_on:
+      - db
+volumes:
+  my-db:
+    driver: local
+networks:
+  spring-demo:
+    driver: bridge

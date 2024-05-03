@@ -2,10 +2,12 @@ package com.apex.picloud.controllers;
 
 import com.apex.picloud.dtos.AuthentificationRequest;
 import com.apex.picloud.dtos.AuthentificationResponse;
+import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.jwt.UserDetailsServiceImpl;
 import com.apex.picloud.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -23,10 +25,13 @@ public class AuthentificationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtUtil jwtUtil;
 @PostMapping("/authentication")
+@SendTo("/user/public")
     public AuthentificationResponse createAuthentificationToken(@RequestBody AuthentificationRequest authentificationRequest, HttpServletResponse response)throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
 try{
 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authentificationRequest.getEmail(),authentificationRequest.getPassword()));

@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="forums")
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class Forum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +25,12 @@ public class Forum {
     String forum_name ;
 
     String description ;
-    String created_by ;
 
-    @CreatedDate
+    @ManyToOne
+    private User createdBy ;
     LocalDateTime created_at ;
 
+    @OneToMany
+    private List<Topic> topics ;
 
-    public Forum() {
-
-    }
 }

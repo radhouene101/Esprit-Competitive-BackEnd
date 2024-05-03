@@ -21,13 +21,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+import static javax.management.Query.and;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
 
-    @Autowired
-    private JwtRequestFilter requestFilter;
+@Autowired
+private JwtRequestFilter requestFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -36,8 +38,29 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
+         http.cors().and().csrf().disable() ;
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/**","user/**","user/verify-account",
+                        "/register",
+                        "/authentication",
+                        "/forgot-password",
+                        "/set-password",
+                        "/ws/**",
+                        "/ws/info",
+                        "/messages/**",
+                        // resources for swagger to work properly
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/webjars/**",
+                        "/swagger-ui/**"
+
+                ).permitAll()
                 .requestMatchers(  "/**",
                         "user/**","user/verify-account",
                         "/register",
@@ -68,7 +91,7 @@ public class WebSecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)//houni staamlna token
-        ;
+                ;
         return http.httpBasic().and().build();
     }
 
