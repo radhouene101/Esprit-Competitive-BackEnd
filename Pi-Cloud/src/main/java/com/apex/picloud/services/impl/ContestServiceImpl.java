@@ -39,7 +39,11 @@ public class ContestServiceImpl implements IContestService {
     public ContestDto save(ContestDto dto) {
         log.info( "---------------" +dto.toString());
         validator.validate(dto);
+        if(dto.getProjects()==null){
+            dto.setProjects(new ArrayList<>());
+        }
         Contest contest = ContestDto.toEntity(dto);
+
         repository.save(contest);
 
         return ContestDto.fromEntity(contest);

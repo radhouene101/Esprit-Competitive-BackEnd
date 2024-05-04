@@ -1,6 +1,7 @@
 package com.apex.picloud.entities;
 
 import com.apex.picloud.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,8 +38,10 @@ public class Projects  {
     private TypeNiveau niveau;
     @ManyToOne
     @JoinColumn(name = "option_id")
+    @JsonIgnore
     private Option optionSpeciality;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private CategoryProjects category;
     private String coach;
@@ -46,8 +49,11 @@ public class Projects  {
     private String scolarYear;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @ManyToOne(optional = true)
+    @JoinColumn(name = "contest_id",nullable = true)
+    @JsonIgnore
     private Contest contest;
 
 

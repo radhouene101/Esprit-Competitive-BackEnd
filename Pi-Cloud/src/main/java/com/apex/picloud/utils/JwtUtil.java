@@ -1,8 +1,11 @@
 package com.apex.picloud.utils;
 
+import com.apex.picloud.models.User;
+import com.apex.picloud.repositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.io.Decoders;
@@ -17,7 +20,8 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-
+    @Autowired
+    private  UserRepository repository;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -50,7 +54,14 @@ public class JwtUtil {
     }
 
     public String generateToken(String userName){
+        //here we extracted the connected User , username is the email
+        final User user = repository.findByEmail(userName).get();
+
         Map<String,Object> claims=new HashMap<>();
+        //here set claims that you want to extract from the token;
+        claims.put("userId",user.getId());
+        claims.put("rolesList",user.getRoles());
+        claims.put("name",user.getName());
         return createToken(claims,userName);
     }
 
