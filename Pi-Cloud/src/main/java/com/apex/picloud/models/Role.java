@@ -13,8 +13,7 @@ public class Role {
 
     private String name;
 
-    @ManyToMany()
-    private Set<Role> roles = new HashSet<>();
+
 
     public Role() {
 
