@@ -26,16 +26,16 @@ public class Projects  {
     @Column(name="group_name")
     private String groupName;
     @Column(name="nominated")
-    private boolean nominated;
+    private Boolean nominated;
     @Column(name="submit_date")
     private Date date;
     private String classe;
     @Column(name="vote_number")
-    private int numberOfVotes;
+    private Integer numberOfVotes;
     @Column(name = "groupStreak")
-    private int groupStreak;
+    private Integer groupStreak;
     @Column(name="winner")
-    private boolean winner;
+    private Boolean winner;
     @Enumerated(EnumType.STRING)
     private TypeNiveau niveau;
     @ManyToOne
@@ -47,7 +47,7 @@ public class Projects  {
     @JoinColumn(name = "category_id")
     private CategoryProjects category;
     private String coach;
-    private boolean votingpool;
+    private Boolean votingpool;
     private String scolarYear;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -57,9 +57,9 @@ public class Projects  {
     @JoinColumn(name = "contest_id",nullable = true)
     @JsonBackReference
     private Contest contest;
-
     @ManyToMany
     private Set<User> voters;
+    private String videoUrl;
 
 
 

@@ -16,21 +16,22 @@ public class ProjectsDto {
     private Long id;
     private String name;
     private String groupName;
-    private boolean nominated;
+    private Boolean nominated;
     private Date date;
-    private int numberOfVotes;
-    private int groupStreak;
-    private boolean winner;
+    private Integer numberOfVotes;
+    private Integer groupStreak;
+    private Boolean winner;
     private TypeNiveau niveau;
     private Option optionSpeciality;
     private CategoryProjects category;
     private String coach;
-    private boolean votingpool;
+    private Boolean votingpool;
     private String scolarYear;
     private Long userId;
     private String classe;
     private Contest contest;
     private Set<User> voters;
+    private String videoUrl;
 
     public static ProjectsDto fromEntity(Projects projects) {
 
@@ -38,20 +39,21 @@ public class ProjectsDto {
         dto.setId(projects.getId());
         dto.setName(projects.getName());
         dto.setGroupName(projects.getGroupName());
-        dto.setNominated(projects.isNominated());
+        dto.setNominated(projects.getNominated());
         dto.setClasse(projects.getClasse());
         dto.setDate(projects.getDate());
         dto.setNumberOfVotes(projects.getNumberOfVotes());
         dto.setUserId(projects.getUser() != null ? projects.getUser().getId() : null);
         dto.setGroupStreak(projects.getGroupStreak());
-        dto.setWinner(projects.isWinner());
+        dto.setWinner(projects.getWinner());
         dto.setNiveau(projects.getNiveau());
-        dto.setVotingpool(projects.isVotingpool());
+        dto.setVotingpool(projects.getVotingpool());
         dto.setScolarYear(projects.getScolarYear());
         dto.setCoach(projects.getCoach());
         dto.setCategory(projects.getCategory());
         dto.setOptionSpeciality(projects.getOptionSpeciality());
         dto.setVoters(projects.getVoters());
+        dto.setVideoUrl(projects.getVideoUrl());
         // Avoiding circular reference here
         if (projects.getContest() != null) {
             dto.setContest(projects.getContest());
@@ -67,19 +69,20 @@ public class ProjectsDto {
                 .name(projectsDto.getName())
                 .classe(projectsDto.getClasse())
                 .groupName(projectsDto.getGroupName())
-                .nominated(projectsDto.isNominated())
+                .nominated(projectsDto.getNominated())
                 .date(projectsDto.getDate())
                 .numberOfVotes(projectsDto.getNumberOfVotes())
                 .groupStreak(projectsDto.getGroupStreak())
-                .winner(projectsDto.isWinner())
+                .winner(projectsDto.getWinner())
                 .niveau(projectsDto.getNiveau())
-                .votingpool(projectsDto.isVotingpool())
+                .votingpool(projectsDto.getVotingpool())
                 .scolarYear(projectsDto.getScolarYear())
                 .coach(projectsDto.getCoach())
                 .category(projectsDto.getCategory())
                 .optionSpeciality(projectsDto.getOptionSpeciality())
                 .contest(projectsDto.getContest())
                 .voters(projectsDto.getVoters())
+                .videoUrl(projectsDto.getVideoUrl())
                 .build();
     }
 }

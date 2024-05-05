@@ -87,7 +87,7 @@ public class ProjectsController {
        return ResponseEntity.ok(service.updateProject(projectId,projectsDto));
     }
     @PatchMapping("voteUp/{projectId}/{userId}")
-    public ResponseEntity<Boolean> updateProject(@PathVariable Long projectId, @PathVariable Long userId){
+    public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){
         return ResponseEntity.ok(service.voteUp(projectId,userId));
     }
 

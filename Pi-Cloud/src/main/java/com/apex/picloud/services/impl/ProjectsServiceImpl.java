@@ -145,7 +145,7 @@ public class ProjectsServiceImpl implements IProjectsService {
                 p.setClasse(projectsDto.getClasse());
                 p.setNiveau(projectsDto.getNiveau());
                 p.setOptionSpeciality(projectsDto.getOptionSpeciality());
-                p.setWinner(projectsDto.isWinner());
+                p.setWinner(projectsDto.getWinner());
                 p.setScolarYear(projectsDto.getScolarYear());
 
 
@@ -161,7 +161,8 @@ public class ProjectsServiceImpl implements IProjectsService {
             return false;
         }
         projects.getVoters().add(user);
-        projects.setNumberOfVotes(projects.getVoters().toArray().length);
+        projects.setNumberOfVotes(projects.getNumberOfVotes()+1);
+        repository.save(projects);
         return true;
     }
 }
