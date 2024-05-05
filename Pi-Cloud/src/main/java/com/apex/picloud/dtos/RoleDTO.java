@@ -1,8 +1,11 @@
 package com.apex.picloud.dtos;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoleDTO {
     private Long id;
     private String name;

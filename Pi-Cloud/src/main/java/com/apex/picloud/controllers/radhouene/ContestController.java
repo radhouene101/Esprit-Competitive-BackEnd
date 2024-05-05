@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("contest-bal-de-projet")
+@RequestMapping(value = "contest-bal-de-projet",consumes = {"application/json"},produces = {"application/json"})
 @Tag(name = "contest-bal-de-projet")
 public class ContestController {
     @Autowired
@@ -47,7 +47,7 @@ public class ContestController {
         service.assignProjectToContest(contestDtoID,projectId);
         return ResponseEntity.ok().build();
     }
-    @PostMapping("save-contest/{optionId}")
+    @PostMapping(value = "save-contest/{optionId}",consumes = {"application/json"},produces = {"application/json"})
     public ResponseEntity<Void> customSaveContest(@PathVariable Long optionId,@RequestBody ContestDto contestDto) {
         service.customSaveContest(optionId,contestDto);
         return ResponseEntity.ok().build();

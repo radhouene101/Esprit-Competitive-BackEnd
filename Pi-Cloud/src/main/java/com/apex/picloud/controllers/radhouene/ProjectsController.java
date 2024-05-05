@@ -92,9 +92,9 @@ public class ProjectsController {
     public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){
         return ResponseEntity.ok(service.voteUp(projectId,userId));
     }
-    @PostMapping("/save-with-image")
-    public ResponseEntity<ProjectsDto> saveWithImage(@RequestBody ProjectsDto dto, @RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(service.saveWithImage(dto,file));
-    }
+//    @PostMapping("/save-with-image")
+//    public ResponseEntity<ProjectsDto> saveWithImage(@RequestBody ProjectsDto dto, @RequestParam("file") MultipartFile file) throws IOException {
+//        return ResponseEntity.ok(service.saveWithImage(dto,file));
+//    }
 
 }

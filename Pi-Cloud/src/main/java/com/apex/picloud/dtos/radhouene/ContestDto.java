@@ -23,8 +23,6 @@ public class ContestDto {
     private String name;
     private String description;
     private TypeNiveau niveau;
-    @JsonIdentityReference(alwaysAsId = true)
-    @Nullable
     private List<Projects> projects;
     private Option option;
     private LocalDate deadline;
