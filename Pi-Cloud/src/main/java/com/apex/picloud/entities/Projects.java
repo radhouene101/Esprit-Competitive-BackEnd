@@ -1,11 +1,13 @@
 package com.apex.picloud.entities;
 
 import com.apex.picloud.models.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 
 @Getter
@@ -53,8 +55,11 @@ public class Projects  {
     private User user;
     @ManyToOne(optional = true)
     @JoinColumn(name = "contest_id",nullable = true)
-    @JsonIgnore
+    @JsonBackReference
     private Contest contest;
+
+    @ManyToMany
+    private Set<User> voters;
 
 
 

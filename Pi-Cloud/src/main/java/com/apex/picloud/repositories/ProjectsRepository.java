@@ -19,4 +19,5 @@ public interface ProjectsRepository extends JpaRepository<Projects,Long> {
     List<Projects> findAllByWinner(boolean b);
     List<Projects> findGroupByGroupStreakGreaterThanOrderByGroupStreak(Integer streakValue);
     List<Projects> findAllByNiveauAndOptionSpeciality(TypeNiveau niveau, Option idOption);
+    List<Projects> findAllByContestId(Long contestId);
 }

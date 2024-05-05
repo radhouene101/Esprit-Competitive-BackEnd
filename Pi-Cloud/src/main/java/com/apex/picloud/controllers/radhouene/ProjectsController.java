@@ -75,7 +75,20 @@ public class ProjectsController {
     }
 
     @PostMapping("/save-project/{optionId}/{categoryId}")
-    public ProjectsDto customSave(@PathVariable Long optionId,@PathVariable Long categoryId ,@RequestBody ProjectsDto dto) {
-        return service.customSave(optionId,categoryId,dto);
+    public ResponseEntity<ProjectsDto> customSave(@PathVariable Long optionId,@PathVariable Long categoryId ,@RequestBody ProjectsDto dto) {
+        return  ResponseEntity.ok(service.customSave(optionId,categoryId,dto));
     }
+    @GetMapping("/find-projects-by-contestID/{contestId}")
+    public ResponseEntity<List<ProjectsDto>> getProjectsByContest(Long contestId){
+        return ResponseEntity.ok(service.getProjectsByContest(contestId));
+    }
+    @PatchMapping("/updateProject/{projectId}")
+    public ResponseEntity<ProjectsDto> updateProject(@PathVariable Long projectId, @RequestBody ProjectsDto projectsDto){
+       return ResponseEntity.ok(service.updateProject(projectId,projectsDto));
+    }
+    @PatchMapping("voteUp/{projectId}/{userId}")
+    public ResponseEntity<Boolean> updateProject(@PathVariable Long projectId, @PathVariable Long userId){
+        return ResponseEntity.ok(service.voteUp(projectId,userId));
+    }
+
 }

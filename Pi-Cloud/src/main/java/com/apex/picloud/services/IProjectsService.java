@@ -18,5 +18,7 @@ public interface IProjectsService extends AbstractService<ProjectsDto> {
     List<ProjectsDto> getAllByCategory(String category);
     List<ProjectsDto> getAllByOptionSpeciality(String option);
     List<ProjectsDto> getAllByNiveau(TypeNiveau niveau);
-
+    List<ProjectsDto> getProjectsByContest(Long contestId);
+    ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto);
+    Boolean voteUp(Long projectId,Long userId);
 }

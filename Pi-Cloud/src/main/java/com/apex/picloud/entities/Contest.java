@@ -1,5 +1,7 @@
 package com.apex.picloud.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class Contest {
     private LocalDate deadline;
     @OneToMany(mappedBy = "contest",orphanRemoval = true,cascade = CascadeType.ALL)
     @Nullable
+    @JsonManagedReference
     private List<Projects> projects;
     @ManyToOne
     private Option option;

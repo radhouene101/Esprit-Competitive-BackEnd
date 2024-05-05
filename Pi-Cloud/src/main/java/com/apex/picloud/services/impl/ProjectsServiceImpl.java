@@ -5,9 +5,11 @@ import com.apex.picloud.entities.CategoryProjects;
 import com.apex.picloud.entities.Option;
 import com.apex.picloud.entities.Projects;
 import com.apex.picloud.entities.TypeNiveau;
+import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.CategoryProjectsRepository;
 import com.apex.picloud.repositories.OptionRepository;
 import com.apex.picloud.repositories.ProjectsRepository;
+import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.IProjectsService;
 import com.apex.picloud.validator.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +32,8 @@ public class ProjectsServiceImpl implements IProjectsService {
     private final CategoryProjectsRepository categoryProjectsRepository;
     @Autowired
     private  final ObjectsValidator validator;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -123,5 +127,41 @@ public class ProjectsServiceImpl implements IProjectsService {
         dto.setOptionSpeciality(option);
         save(dto);
         return dto;
+    }
+
+    public List<ProjectsDto> getProjectsByContest(Long contestId){
+        return repository.findAllByContestId(contestId).stream()
+                .map(ProjectsDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+    public ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto){
+        Projects p = repository.findById(projectId).get();
+
+                p.setId(projectId);
+                p.setDate(projectsDto.getDate());
+                p.setName(projectsDto.getName());
+                p.setGroupName(projectsDto.getGroupName());
+                p.setCoach(projectsDto.getCoach());
+                p.setClasse(projectsDto.getClasse());
+                p.setNiveau(projectsDto.getNiveau());
+                p.setOptionSpeciality(projectsDto.getOptionSpeciality());
+                p.setWinner(projectsDto.isWinner());
+                p.setScolarYear(projectsDto.getScolarYear());
+
+
+        repository.save(p);
+        return projectsDto ;
+    }
+    public Boolean voteUp(Long projectId,Long userId){
+        Projects projects = repository.findById(projectId).
+                orElseThrow(() -> new EntityNotFoundException("no project was found with this id"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("no User was found with this id"));
+        if(projects.getVoters().contains(user)){
+            return false;
+        }
+        projects.getVoters().add(user);
+        projects.setNumberOfVotes(projects.getVoters().toArray().length);
+        return true;
     }
 }
