@@ -17,9 +17,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany(mappedBy = "roles")
-    //@JsonIgnoreProperties("user_roles")
     private Set<User> user_roles = new HashSet<>();
     private String name;
-
 // Constructors, getters, and setters
 }

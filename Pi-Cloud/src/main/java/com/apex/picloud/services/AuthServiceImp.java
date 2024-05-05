@@ -7,7 +7,7 @@ import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.utils.EmailUtil;
 import com.apex.picloud.utils.OptUtil;
 import jakarta.mail.MessagingException;
-import jakarta.persistence.EntityExistsException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 public class AuthServiceImp implements AuthService{
     @Autowired
     private UserRepository userRepository;
@@ -22,6 +23,7 @@ public class AuthServiceImp implements AuthService{
     private OptUtil otpUtil;
     @Autowired
     private EmailUtil emailUtil;
+
 
     @Override
     public UserDTO createUser(SignupRequest signupRequest) {
