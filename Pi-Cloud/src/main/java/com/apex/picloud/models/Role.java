@@ -1,43 +1,21 @@
 package com.apex.picloud.models;
 
 import jakarta.persistence.*;
-
+import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
-
 @Entity
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> user_roles = new HashSet<>();
     private String name;
 
-    @ManyToMany()
-    private Set<Role> roles = new HashSet<>();
-
-    public Role() {
-
-    }
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 // Constructors, getters, and setters
 }
