@@ -2,15 +2,16 @@ package com.apex.picloud.services.impl;
 
 
 import com.apex.picloud.dtos.radhouene.ContestDto;
-import com.apex.picloud.dtos.radhouene.ProjectsDto;
 import com.apex.picloud.entities.Contest;
 import com.apex.picloud.entities.Option;
+import com.apex.picloud.entities.Projects;
 import com.apex.picloud.repositories.ContestRepository;
 import com.apex.picloud.repositories.OptionRepository;
 import com.apex.picloud.repositories.ProjectsRepository;
 import com.apex.picloud.services.IContestService;
 import com.apex.picloud.validator.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +35,20 @@ public class ContestServiceImpl implements IContestService {
     @Autowired
     private final ObjectsValidator<ContestDto> validator;
 
+    @Autowired
+    private final ProjectsServiceImpl projectsService;
+    @Autowired
+    private ContestRepository contestRepository;
+
     @Override
     public ContestDto save(ContestDto dto) {
         log.info( "---------------" +dto.toString());
         validator.validate(dto);
+        if(dto.getProjects()==null){
+            dto.setProjects(new ArrayList<>());
+        }
         Contest contest = ContestDto.toEntity(dto);
+
         repository.save(contest);
 
         return ContestDto.fromEntity(contest);
@@ -83,12 +92,29 @@ public class ContestServiceImpl implements IContestService {
     }
 
     @Override
+    @Transactional
     public ContestDto assignProjectToContest(Long contestDtoId, Long projectId) {
-        ContestDto contestDto = findById(contestDtoId);
-        contestDto.setProjects(Collections.singletonList(projectsRepository.
-                findById(projectId).map(ProjectsDto::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("the project  you want to assign doesnt exist" + projectId))));
-       save(contestDto);
-       return  contestDto;
+        Contest contest = contestRepository.findById(contestDtoId).orElseThrow(()-> new EntityNotFoundException("contest not found "));
+        log.info("contest--------------" + contest.getId());
+        Projects project = projectsRepository.findById(projectId)
+                .orElseThrow(()-> new EntityNotFoundException("project not found"));
+// Initialize the projects list if null
+        List<Projects> projectsList = new ArrayList<>();
+        projectsList = contest.getProjects();
+        if(projectsList!=null) {
+            projectsList.add(project);
+        }
+        contest.setProjects(projectsList);
+        project.setContest(contest);
+        projectsRepository.save(project);
+        contestRepository.save(contest);
+
+        return null;
+    }
+
+    @Override
+    public ContestDto updateContest(Long id, ContestDto contestDto) {
+
+        return null;
     }
 }

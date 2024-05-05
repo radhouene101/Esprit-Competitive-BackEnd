@@ -5,22 +5,35 @@ import com.apex.picloud.entities.CategoryProjects;
 import com.apex.picloud.entities.Option;
 import com.apex.picloud.entities.Projects;
 import com.apex.picloud.entities.TypeNiveau;
+import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.CategoryProjectsRepository;
 import com.apex.picloud.repositories.OptionRepository;
 import com.apex.picloud.repositories.ProjectsRepository;
+import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.IProjectsService;
 import com.apex.picloud.validator.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectsServiceImpl implements IProjectsService {
+    private static final Logger log = LoggerFactory.getLogger(ProjectsServiceImpl.class);
     @Autowired
     private  final ProjectsRepository repository;
     @Autowired
@@ -30,6 +43,8 @@ public class ProjectsServiceImpl implements IProjectsService {
     private final CategoryProjectsRepository categoryProjectsRepository;
     @Autowired
     private  final ObjectsValidator validator;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -39,6 +54,14 @@ public class ProjectsServiceImpl implements IProjectsService {
         repository.save(project);
         return ProjectsDto.fromEntity(project);
     }
+//    @Override
+//    public ProjectsDto saveWithImage(ProjectsDto dto,MultipartFile file) throws IOException {
+//        validator.validate(dto);
+//        Projects project = ProjectsDto.toEntity(dto);
+//        uploadEventImage(project,file);
+//        repository.save(project);
+//        return ProjectsDto.fromEntity(project);
+//    }
 
     @Override
     public List<ProjectsDto> findAll() {
@@ -124,4 +147,42 @@ public class ProjectsServiceImpl implements IProjectsService {
         save(dto);
         return dto;
     }
-}
+
+    public List<ProjectsDto> getProjectsByContest(Long contestId){
+        return repository.findAllByContestId(contestId).stream()
+                .map(ProjectsDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+    public ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto){
+        Projects p = repository.findById(projectId).get();
+
+                p.setId(projectId);
+                p.setDate(projectsDto.getDate());
+                p.setName(projectsDto.getName());
+                p.setGroupName(projectsDto.getGroupName());
+                p.setCoach(projectsDto.getCoach());
+                p.setClasse(projectsDto.getClasse());
+                p.setNiveau(projectsDto.getNiveau());
+                p.setOptionSpeciality(projectsDto.getOptionSpeciality());
+                p.setWinner(projectsDto.getWinner());
+                p.setScolarYear(projectsDto.getScolarYear());
+
+
+        repository.save(p);
+        return projectsDto ;
+    }
+    public Boolean voteUp(Long projectId,Long userId){
+        Projects projects = repository.findById(projectId).
+                orElseThrow(() -> new EntityNotFoundException("no project was found with this id"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("no User was found with this id"));
+        if(projects.getVoters().contains(user)){
+            return false;
+        }
+        projects.getVoters().add(user);
+        projects.setNumberOfVotes(projects.getNumberOfVotes()+1);
+        repository.save(projects);
+        return true;
+    }
+
+    }
