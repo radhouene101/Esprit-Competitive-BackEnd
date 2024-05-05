@@ -14,15 +14,26 @@ import com.apex.picloud.services.IProjectsService;
 import com.apex.picloud.validator.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectsServiceImpl implements IProjectsService {
+    private static final Logger log = LoggerFactory.getLogger(ProjectsServiceImpl.class);
     @Autowired
     private  final ProjectsRepository repository;
     @Autowired
@@ -43,6 +54,14 @@ public class ProjectsServiceImpl implements IProjectsService {
         repository.save(project);
         return ProjectsDto.fromEntity(project);
     }
+//    @Override
+//    public ProjectsDto saveWithImage(ProjectsDto dto,MultipartFile file) throws IOException {
+//        validator.validate(dto);
+//        Projects project = ProjectsDto.toEntity(dto);
+//        uploadEventImage(project,file);
+//        repository.save(project);
+//        return ProjectsDto.fromEntity(project);
+//    }
 
     @Override
     public List<ProjectsDto> findAll() {
@@ -165,4 +184,5 @@ public class ProjectsServiceImpl implements IProjectsService {
         repository.save(projects);
         return true;
     }
-}
+
+    }

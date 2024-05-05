@@ -10,6 +10,8 @@ RUN mvn clean package -DskipTests
 FROM amazoncorretto:17
 ARG PROFILE=dev
 ARG APP_VERSION=1.0.0
+ARG DB_IP=10.0.0.0
+ARG DB_PORT=3306
 
 WORKDIR /app
 COPY --from=build /build/target/spring-jwt-*.jar /app/
@@ -18,11 +20,13 @@ RUN APP_VERSION=$(ls /app | grep *.jar | awk 'NR==2{split($0,a,"-"); print a[3]}
     && echo "Building container with BSN v-$version"
 EXPOSE 8083
 
-ENV DB_URL=jdbc:mysql://competitivex:3306/db
+ENV DB_URL=jdbc:mysql://${DB_IP}:${DB_PORT}/db
 ENV ACTIVE_PROFILE=${PROFILE}
 ENV JAR_VERSION=${APP_VERSION}
+ENV USER_DB=user
+ENV USER_PASS_DB=password
 
-CMD java -jar -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url=${DB_URL} spring-jwt-*.jar
+CMD java -jar -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url=${DB_URL} -Dspring.database.user=${USER_DB} -Dspring.database.user=${USER_PASS_DB} spring-jwt-*.jar
 
 
 

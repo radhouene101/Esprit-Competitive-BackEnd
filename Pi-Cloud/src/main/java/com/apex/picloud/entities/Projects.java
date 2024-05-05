@@ -60,6 +60,7 @@ public class Projects  {
     @ManyToMany
     private Set<User> voters;
     private String videoUrl;
+    private String imageUrl;
 
 
 

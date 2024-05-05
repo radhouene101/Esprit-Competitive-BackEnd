@@ -60,6 +60,7 @@ public class JwtUtil {
         Map<String,Object> claims=new HashMap<>();
         //here set claims that you want to extract from the token;
         claims.put("userId",user.getId());
+        claims.put("phoneNumber",user.getPhone());
         claims.put("rolesList",user.getRoles());
         claims.put("name",user.getName());
         return createToken(claims,userName);

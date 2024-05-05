@@ -38,7 +38,7 @@ private JwtRequestFilter requestFilter;
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
          http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/**","user/**","user/verify-account",
+                .requestMatchers("/**","user/**","user/verify-account/**",
                         "/register",
                         "/authentication",
                         "/forgot-password",
@@ -67,7 +67,8 @@ private JwtRequestFilter requestFilter;
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)//houni staamlna token
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+         //houni staamlna token
                 ;
         return http.httpBasic().and().build();
     }

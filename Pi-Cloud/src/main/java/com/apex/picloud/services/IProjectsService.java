@@ -3,7 +3,9 @@ package com.apex.picloud.services;
 
 import com.apex.picloud.dtos.radhouene.ProjectsDto;
 import com.apex.picloud.entities.TypeNiveau;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IProjectsService extends AbstractService<ProjectsDto> {
@@ -21,4 +23,5 @@ public interface IProjectsService extends AbstractService<ProjectsDto> {
     List<ProjectsDto> getProjectsByContest(Long contestId);
     ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto);
     Boolean voteUp(Long projectId,Long userId);
+    //ProjectsDto saveWithImage(ProjectsDto dto, MultipartFile file) throws IOException;
 }

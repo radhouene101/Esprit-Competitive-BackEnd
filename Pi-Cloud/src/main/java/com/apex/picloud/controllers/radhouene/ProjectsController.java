@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +91,10 @@ public class ProjectsController {
     @PatchMapping("voteUp/{projectId}/{userId}")
     public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){
         return ResponseEntity.ok(service.voteUp(projectId,userId));
+    }
+    @PostMapping("/save-with-image")
+    public ResponseEntity<ProjectsDto> saveWithImage(@RequestBody ProjectsDto dto, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(service.saveWithImage(dto,file));
     }
 
 }

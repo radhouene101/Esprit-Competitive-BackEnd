@@ -32,6 +32,7 @@ public class ProjectsDto {
     private Contest contest;
     private Set<User> voters;
     private String videoUrl;
+    private String imageUrl;
 
     public static ProjectsDto fromEntity(Projects projects) {
 
@@ -54,6 +55,7 @@ public class ProjectsDto {
         dto.setOptionSpeciality(projects.getOptionSpeciality());
         dto.setVoters(projects.getVoters());
         dto.setVideoUrl(projects.getVideoUrl());
+        dto.setImageUrl(projects.getImageUrl());
         // Avoiding circular reference here
         if (projects.getContest() != null) {
             dto.setContest(projects.getContest());
@@ -83,6 +85,7 @@ public class ProjectsDto {
                 .contest(projectsDto.getContest())
                 .voters(projectsDto.getVoters())
                 .videoUrl(projectsDto.getVideoUrl())
+                .imageUrl(projectsDto.getImageUrl())
                 .build();
     }
 }
