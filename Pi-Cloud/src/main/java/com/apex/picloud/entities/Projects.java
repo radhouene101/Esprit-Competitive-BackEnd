@@ -40,10 +40,8 @@ public class Projects  {
     private TypeNiveau niveau;
     @ManyToOne
     @JoinColumn(name = "option_id")
-    @JsonIgnore
     private Option optionSpeciality;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "category_id")
     private CategoryProjects category;
     private String coach;
@@ -51,11 +49,9 @@ public class Projects  {
     private String scolarYear;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
     @ManyToOne(optional = true)
     @JoinColumn(name = "contest_id",nullable = true)
-    @JsonBackReference
     private Contest contest;
     @ManyToMany
     private Set<User> voters;

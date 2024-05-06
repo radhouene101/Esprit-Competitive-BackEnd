@@ -25,9 +25,7 @@ public class Contest {
     private String description;
     private TypeNiveau niveau;
     private LocalDate deadline;
-    @OneToMany(mappedBy = "contest",orphanRemoval = true,cascade = CascadeType.ALL)
-    @Nullable
-    @JsonManagedReference
+    @OneToMany(mappedBy = "contest")
     private List<Projects> projects;
     @ManyToOne
     private Option option;

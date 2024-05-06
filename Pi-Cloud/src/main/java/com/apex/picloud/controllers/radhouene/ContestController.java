@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "contest-bal-de-projet",consumes = {"application/json"},produces = {"application/json"})
+@RequestMapping(value = "contest-bal-de-projet")
 @Tag(name = "contest-bal-de-projet")
 public class ContestController {
     @Autowired
