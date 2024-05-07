@@ -3,6 +3,7 @@ package com.apex.picloud.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Set;
 @Entity
 @Table(name="event")
@@ -20,8 +21,26 @@ public class Event {
     private Double longitude;
     private Double lattitude;
     private String imageUrl;
+    private Date date;
+    private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="event")
     private Set<Group> groups;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Set<Group> getGroups() {
         return groups;
