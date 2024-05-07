@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
 
 @Configuration
@@ -38,7 +37,10 @@ private JwtRequestFilter requestFilter;
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
          http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/**","user/**","user/verify-account/**",
+
+                .requestMatchers("/api/marketplace/products/addProduct", "/api/marketplace/products/getProductById/{id}", "/api/marketplace/products/getAllProducts", "/api/marketplace/products/updateProduct/{id}", "/api/marketplace/products/deleteProduct/{id}","/api/marketplace/categories/getAllCategories", "/api/marketplace/categories/getCategoryById/{id}","/api/marketplace/categories/addCategory" ,
+                        "/api/marketplace/categories/deleteCategory/{id}","/api/cart-items"  , "/api/cart-items/{id}" , "/api/orders", "/api/orders/{id}" , "/api/customers", "/api/cart/add-item",
+                        "/**","user/**","user/verify-account/**","user/current-user",
                         "/register",
                         "/authentication",
                         "/forgot-password",
@@ -55,14 +57,10 @@ private JwtRequestFilter requestFilter;
                         "/configuration/ui",
                         "/configuration/security",
                         "/webjars/**",
-                        "/swagger-ui/**"
-
-                ).permitAll()
+                        "/swagger-ui/**").permitAll()
                 .and()
-
                 .authorizeHttpRequests().requestMatchers("/roletest/hello","/forgot-password").hasRole("USER").and()
-
-                .authorizeHttpRequests().requestMatchers("/api/**")
+                .authorizeHttpRequests().requestMatchers("/api/**", "/api/marketplace/products", "/api/marketplace/categories", "/api/cart-items","/api/orders", "/api/customers", "/api/cart" )
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -4,5 +4,4 @@ import com.apex.picloud.dtos.radhouene.ContestDto;
 public interface IContestService extends AbstractService<ContestDto>{
     ContestDto customSaveContest(Long optionId ,ContestDto contestDto);
     ContestDto assignProjectToContest(Long contestDtoId , Long projectId);
-    ContestDto updateContest(Long id, ContestDto contestDto);
 }
