@@ -1,91 +1,78 @@
 package com.apex.picloud.dtos.radhouene;
 
-import com.apex.picloud.entities.*;
 import com.apex.picloud.models.User;
-import lombok.*;
+import com.apex.picloud.entities.CategoryProjects;
+import com.apex.picloud.entities.Option;
+import com.apex.picloud.entities.Projects;
+import com.apex.picloud.entities.TypeNiveau;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class ProjectsDto {
     private Long id;
     private String name;
     private String groupName;
-    private Boolean nominated;
+    private boolean nominated;
     private Date date;
-    private Integer numberOfVotes;
-    private Integer groupStreak;
-    private Boolean winner;
+    private int numberOfVotes;
+    private int groupStreak;
+    private boolean winner;
     private TypeNiveau niveau;
     private Option optionSpeciality;
     private CategoryProjects category;
     private String coach;
-    private Boolean votingpool;
+    private boolean votingpool;
     private String scolarYear;
     private Long userId;
     private String classe;
-    private Contest contest;
-    private Set<User> voters;
-    private String videoUrl;
-    private String imageUrl;
 
-    public static ProjectsDto fromEntity(Projects projects) {
-
-        ProjectsDto dto = new ProjectsDto();
-        dto.setId(projects.getId());
-        dto.setName(projects.getName());
-        dto.setGroupName(projects.getGroupName());
-        dto.setNominated(projects.getNominated());
-        dto.setClasse(projects.getClasse());
-        dto.setDate(projects.getDate());
-        dto.setNumberOfVotes(projects.getNumberOfVotes());
-        dto.setUserId(projects.getUser() != null ? projects.getUser().getId() : null);
-        dto.setGroupStreak(projects.getGroupStreak());
-        dto.setWinner(projects.getWinner());
-        dto.setNiveau(projects.getNiveau());
-        dto.setVotingpool(projects.getVotingpool());
-        dto.setScolarYear(projects.getScolarYear());
-        dto.setCoach(projects.getCoach());
-        dto.setCategory(projects.getCategory());
-        dto.setOptionSpeciality(projects.getOptionSpeciality());
-        dto.setVoters(projects.getVoters());
-        dto.setVideoUrl(projects.getVideoUrl());
-        dto.setImageUrl(projects.getImageUrl());
-        // Avoiding circular reference here
-        if (projects.getContest() != null) {
-            dto.setContest(projects.getContest());
-        }
-        return dto;
+    public static ProjectsDto fromEntity(Projects projects){
+        return ProjectsDto.builder()
+                .id(projects.getId())
+                .name(projects.getName())
+                .groupName(projects.getGroupName())
+                .nominated(projects.isNominated())
+                .classe(projects.getClasse())
+                .date(projects.getDate())
+                .numberOfVotes(projects.getNumberOfVotes())
+                .userId(projects.getUser().getId())
+                .groupStreak(projects.getGroupStreak())
+                .winner(projects.isWinner())
+                .niveau(projects.getNiveau())
+                .votingpool(projects.isVotingpool())
+                .scolarYear(projects.getScolarYear())
+                .coach(projects.getCoach())
+                .category(projects.getCategory())
+                .optionSpeciality(projects.getOptionSpeciality())
+                .build();
     }
-
-    public static Projects toEntity(ProjectsDto projectsDto){
+    public static Projects toEntity(ProjectsDto projects){
         return Projects.builder()
-                .id(projectsDto.getId())
+                .id(projects.getId())
                 .user(User.builder()
-                        .id(projectsDto.getUserId()).build())
-                .name(projectsDto.getName())
-                .classe(projectsDto.getClasse())
-                .groupName(projectsDto.getGroupName())
-                .nominated(projectsDto.getNominated())
-                .date(projectsDto.getDate())
-                .numberOfVotes(projectsDto.getNumberOfVotes())
-                .groupStreak(projectsDto.getGroupStreak())
-                .winner(projectsDto.getWinner())
-                .niveau(projectsDto.getNiveau())
-                .votingpool(projectsDto.getVotingpool())
-                .scolarYear(projectsDto.getScolarYear())
-                .coach(projectsDto.getCoach())
-                .category(projectsDto.getCategory())
-                .optionSpeciality(projectsDto.getOptionSpeciality())
-                .contest(projectsDto.getContest())
-                .voters(projectsDto.getVoters())
-                .videoUrl(projectsDto.getVideoUrl())
-                .imageUrl(projectsDto.getImageUrl())
+                        .id(projects.getUserId()).build())
+                .name(projects.getName())
+                .classe(projects.getClasse())
+                .groupName(projects.getGroupName())
+                .nominated(projects.isNominated())
+                .date(projects.getDate())
+                .numberOfVotes(projects.getNumberOfVotes())
+                .groupStreak(projects.getGroupStreak())
+                .winner(projects.isWinner())
+                .niveau(projects.getNiveau())
+                .votingpool(projects.isVotingpool())
+                .scolarYear(projects.getScolarYear())
+                .coach(projects.getCoach())
+                .category(projects.getCategory())
+                .optionSpeciality(projects.getOptionSpeciality())
                 .build();
     }
 }

@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,24 +75,7 @@ public class ProjectsController {
     }
 
     @PostMapping("/save-project/{optionId}/{categoryId}")
-    public ResponseEntity<ProjectsDto> customSave(@PathVariable Long optionId,@PathVariable Long categoryId ,@RequestBody ProjectsDto dto) {
-        return  ResponseEntity.ok(service.customSave(optionId,categoryId,dto));
+    public ProjectsDto customSave(@PathVariable Long optionId,@PathVariable Long categoryId ,@RequestBody ProjectsDto dto) {
+        return service.customSave(optionId,categoryId,dto);
     }
-    @GetMapping("/find-projects-by-contestID/{contestId}")
-    public ResponseEntity<List<ProjectsDto>> getProjectsByContest(Long contestId){
-        return ResponseEntity.ok(service.getProjectsByContest(contestId));
-    }
-    @PatchMapping("/updateProject/{projectId}")
-    public ResponseEntity<ProjectsDto> updateProject(@PathVariable Long projectId, @RequestBody ProjectsDto projectsDto){
-       return ResponseEntity.ok(service.updateProject(projectId,projectsDto));
-    }
-    @PatchMapping("voteUp/{projectId}/{userId}")
-    public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){
-        return ResponseEntity.ok(service.voteUp(projectId,userId));
-    }
-    @PostMapping("/save-with-image")
-    public ResponseEntity<ProjectsDto> saveWithImage(@RequestBody ProjectsDto dto, @RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(service.saveWithImage(dto,file));
-    }
-
 }
