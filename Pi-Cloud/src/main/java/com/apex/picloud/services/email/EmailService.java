@@ -18,13 +18,17 @@ public class EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
+
     public void sendEmail(String to, String subject, String body) {
+
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body);
+
+            helper.setText("<html><body>" + body + "</body></html>", true);
+
             emailSender.send(message);
         } catch (MessagingException | jakarta.mail.MessagingException e) {
             logger.error("Error occurred while sending email: {}", e.getMessage());

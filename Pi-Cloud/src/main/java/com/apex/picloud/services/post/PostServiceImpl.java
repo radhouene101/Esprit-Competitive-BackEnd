@@ -1,7 +1,9 @@
 package com.apex.picloud.services.post;
 
 import com.apex.picloud.dtos.PostDTO;
+import com.apex.picloud.models.Comment;
 import com.apex.picloud.models.Post;
+import com.apex.picloud.repositories.CommentRepository;
 import com.apex.picloud.repositories.PostRepository;
 import com.apex.picloud.repositories.UserRepository;
 import com.apex.picloud.services.contentModeration.ContentModerationService;
@@ -9,12 +11,15 @@ import com.apex.picloud.validator.ObjectsValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository ;
@@ -23,8 +28,8 @@ public class PostServiceImpl implements PostService {
     private UserRepository userRepository ;
     @Autowired
     private  final ObjectsValidator validator;
-
-
+    @Autowired
+    private CommentRepository commentRepository ;
 
      @Override
     public PostDTO createPost(PostDTO dto ) {
@@ -88,24 +93,28 @@ public class PostServiceImpl implements PostService {
     public void likePost(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
         if (post != null) {
-            int current=0;
-            if(post.getLikesCount()!=null)
-                current=post.getLikesCount();
-            post.setLikesCount(current + 1);
-            postRepository.save(post);
+            Integer currentLikes = post.getLikesCount(); // Get current likes count
+            int current = (currentLikes != null) ? currentLikes : 0; // Initialize current likes with current count or 0
+            post.setLikesCount(current + 1); // Increment likes count
+            postRepository.save(post); // Save the updated post
         }
     }
 
     public void dislikePost(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
         if (post != null) {
-            int current= 0;
-            if(post.getDislikesCount()!=null)
-                current=post.getDislikesCount();
-            post.setDislikesCount(current + 1 );
-            postRepository.save(post);
+            Integer currentLikes = post.getDislikesCount(); // Get current likes count
+            int current = (currentLikes != null) ? currentLikes : 0; // Initialize current likes with current count or 0
+            post.setDislikesCount(current+1); // Increment likes count
+            postRepository.save(post); // Save the updated post
         }
     }
+
+    @Override
+    public List<Post> getAllPostsByTopicId(Long topic_id) {
+        return postRepository.findAllByTopicId(topic_id);
+    }
+
     public void pinMostLikedPost() {
         postRepository.pinMostLikedPost();
     }
@@ -113,6 +122,25 @@ public class PostServiceImpl implements PostService {
     public Post getPinnedPost() {
         return postRepository.findPinnedPost();
     }
+
+    @Override
+    public int getPostLikesCount(Long post_id) {
+        Post post = postRepository.findById(post_id).orElse(null);
+        if (post != null) {
+            return post.getLikesCount();
+        } else {
+            return 0;
+        }
+     }
+
+    @Override
+    public int getPostDislikesCount(Long post_id) {
+        Post post = postRepository.findById(post_id).orElse(null);
+        if (post != null) {
+            return post.getDislikesCount();
+        } else {
+            return 0;
+        }     }
 
 
 }

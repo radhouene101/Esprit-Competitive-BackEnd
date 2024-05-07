@@ -68,5 +68,9 @@ public class CommentController {
         commentService.deleteNestedComment(parentId, nestedId);
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
+        List<Comment> comments = commentService.getCommentsByPostId(postId);
+        return ResponseEntity.ok(comments);
+    }
 }

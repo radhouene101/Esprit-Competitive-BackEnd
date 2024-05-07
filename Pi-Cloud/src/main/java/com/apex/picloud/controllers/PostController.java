@@ -2,7 +2,9 @@ package com.apex.picloud.controllers;
 
 
 import com.apex.picloud.dtos.PostDTO;
+import com.apex.picloud.models.Comment;
 import com.apex.picloud.models.Post;
+import com.apex.picloud.models.Topic;
 import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.PostRepository;
 import com.apex.picloud.repositories.UserRepository;
@@ -88,9 +90,14 @@ public class PostController {
         if (post != null) {
             discordNotifier.sharePostToDiscord(post);
         } else {
-            // Handle case where post with given ID is not found
+
         }
     }
+    @GetMapping("/{topic_id}")
+    public List<Post> getAllPostsByTopicId(@PathVariable Long topic_id) {
+        return postService.getAllPostsByTopicId(topic_id);
+    }
+
 
     @GetMapping("/getPostById/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
@@ -148,5 +155,14 @@ public class PostController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/{postId}/likes")
+    public int getPostLikesCount(@PathVariable Long postId) {
+        return postService.getPostLikesCount(postId);
+    }
+
+    @GetMapping("/{postId}/dislikes")
+    public int getPostDislikesCount(@PathVariable Long postId) {
+        return postService.getPostDislikesCount(postId);
     }
 }

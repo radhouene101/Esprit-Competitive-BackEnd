@@ -20,4 +20,5 @@ public interface CommentService {
     Comment updateNestedComment(Long parentId, Comment nestedComment);
 
     void deleteNestedComment(Long parentId, Long nestedId);
+    List<Comment> getCommentsByPostId(Long postId);
 }

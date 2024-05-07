@@ -95,4 +95,9 @@ public class CommentServiceImpl implements CommentService {
         parentComment.deleteNestedComment(nestedId);
         commentRepository.save(parentComment);
     }
+    @Override
+    public List<Comment> getCommentsByPostId(Long postId) {
+        return commentRepository.findAllByPostId(postId);
+    }
+
 }
