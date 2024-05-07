@@ -1,12 +1,13 @@
 package com.apex.picloud.entities.farouk;
 
+import com.apex.picloud.entities.farouk.enums.Niveau;
+import com.apex.picloud.entities.farouk.enums.OptionEnum;
+import com.apex.picloud.entities.farouk.enums.Visible;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tn.esprit.pibackend.entity.enums.Niveau;
-import tn.esprit.pibackend.entity.enums.OptionEnum;
-import tn.esprit.pibackend.entity.enums.Visible;
+
 
 import java.util.Date;
 import java.util.HashSet;
