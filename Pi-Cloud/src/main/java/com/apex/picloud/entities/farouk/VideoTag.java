@@ -1,8 +1,8 @@
 package com.apex.picloud.entities.farouk;
 
+import com.apex.picloud.entities.farouk.enums.videoTags;
 import jakarta.persistence.*;
 import lombok.*;
-import tn.esprit.pibackend.entity.enums.videoTags;
 
 @Data
 @AllArgsConstructor
