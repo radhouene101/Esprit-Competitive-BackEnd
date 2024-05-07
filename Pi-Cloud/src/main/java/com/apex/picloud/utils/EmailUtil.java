@@ -29,6 +29,20 @@ public class EmailUtil {
         javaMailSender.send(mimeMessage);
     }
 
+    public void sendMailOrder(String email) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Order Confirmation");
+        mimeMessageHelper.setText("""
+        <div>
+          <h1>letsgo thanks</h1>
+        </div>
+        """.formatted(email), true);
+
+        javaMailSender.send(mimeMessage);
+    }
+
     public void sendOtpEmail(String email, String otp) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
