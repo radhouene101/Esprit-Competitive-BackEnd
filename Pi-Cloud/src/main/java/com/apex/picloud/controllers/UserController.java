@@ -46,6 +46,8 @@ public class UserController {
 
 
 
+
+
     @GetMapping("/all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
@@ -110,4 +112,19 @@ public class UserController {
        return new AuthentificationResponse(jwt);
 
    }
+
+
+
+    @GetMapping("/current-user")
+    public ResponseEntity<UserDetails> getCurrentUser() {
+        UserDetails userDetails = userDetailsService.getAuthenticatedUserDetails();
+        if (userDetails != null) {
+            return ResponseEntity.ok(userDetails);
+        } else {
+            // Handle case where user details are not available (e.g., user not authenticated)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
 }
