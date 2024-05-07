@@ -1,4 +1,4 @@
-package com.apex.picloud.entities.enums;
+package com.apex.picloud.entities.farouk.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Niveau {

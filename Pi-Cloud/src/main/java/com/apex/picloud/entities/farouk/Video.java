@@ -1,4 +1,4 @@
-package com.apex.picloud.entities;
+package com.apex.picloud.entities.farouk;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.apex.picloud.entities.enums;
+package com.apex.picloud.entities.farouk.enums;
 
 public enum videoTags {
     PROGRAMMING,
