@@ -16,11 +16,14 @@ public class EmailUtil {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("set password");
+        mimeMessageHelper.setSubject("Reset Password");
         mimeMessageHelper.setText("""
-        <div>
-          <a href="http://localhost:4200/forgotpassword" target="_blank">click link to set password</a>
-        </div>
+    
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; border-radius: 5px; text-align: center;">
+                                               <img src="https://drive.google.com/uc?id=195chz3E64w7nAnHtM5o_uZOHYLBo34q-" alt="Logo de votre entreprise" style="width: 250px; height: auto; margin-bottom: 20px;">
+                         <p style="font-size: 16px; color: #333; margin-bottom: 20px;">click the button below:</p>
+                         <a href="http://localhost:4200/forgotpassword" target="_blank" style="display: inline-block; background-color: black; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Reset Password</a>
+                       </div>
         """.formatted(email), true);
 
         javaMailSender.send(mimeMessage);
@@ -30,13 +33,14 @@ public class EmailUtil {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("Verify OTP");
+        mimeMessageHelper.setSubject("Account Activation");
         mimeMessageHelper.setText("""
-                <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; border-radius: 5px; text-align: center;">
-                         <img src="lien_vers_votre_logo" alt="Logo de votre entreprise" style="width: 100px; height: auto; margin-bottom: 20px;">
-                         <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Bienvenue sur notre plateforme ! Pour activer votre compte, cliquez sur le bouton ci-dessous :</p>
-                         <a href="http://localhost:4200/activateAccount/%s/%s" target="_blank" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Activer le compte</a>
-                       </div>
+               <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; border-radius: 5px; text-align: center;">
+                                               <img src="https://drive.google.com/uc?id=195chz3E64w7nAnHtM5o_uZOHYLBo34q-" alt="Logo de votre entreprise" style="width: 250px; height: auto; margin-bottom: 20px;">
+                                               <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Welcome to our platform! </p>
+                                               <a href="http://localhost:4200/activateAccount/%s/%s" target="_blank" style="display: inline-block; background-color: black; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Account Activation</a>
+                                             </div>
+                                             
                        
         """.formatted(email, otp), true);
 
