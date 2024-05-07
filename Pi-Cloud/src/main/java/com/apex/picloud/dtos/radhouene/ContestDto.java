@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,9 @@ public class ContestDto {
     private TypeNiveau niveau;
     private List<Projects> projects;
     private Option option;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
     private String image;
+    private Boolean allowVote;
 
     public static ContestDto fromEntity(Contest contest) {
         if (contest == null) {
@@ -40,6 +42,7 @@ public class ContestDto {
         dto.setNiveau(contest.getNiveau());
         dto.setDeadline(contest.getDeadline());
         dto.setImage(contest.getImage());
+        dto.setAllowVote(contest.getAllowVote());
         // Avoiding infinite recursion for projects
         dto.setProjects(contest.getProjects());
 
@@ -52,13 +55,11 @@ public class ContestDto {
                 .name(contest.getName())
                 .description(contest.getDescription())
                 .projects(contest.getProjects())
-                .option(
-                        Option.builder()
-                                .id(contest.getOption().getId())
-                                .build())
+                .option(contest.getOption())
                 .niveau(contest.getNiveau())
                 .deadline(contest.getDeadline())
                 .image(contest.getImage())
+                .allowVote(contest.allowVote)
                 .build();
     }
 

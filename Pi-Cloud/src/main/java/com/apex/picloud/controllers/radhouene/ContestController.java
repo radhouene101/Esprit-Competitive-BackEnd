@@ -1,8 +1,10 @@
 package com.apex.picloud.controllers.radhouene;
 
 import com.apex.picloud.dtos.radhouene.ContestDto;
+import com.apex.picloud.dtos.radhouene.ProjectsDto;
 import com.apex.picloud.services.IContestService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +53,21 @@ public class ContestController {
     public ResponseEntity<Void> customSaveContest(@PathVariable Long optionId,@RequestBody ContestDto contestDto) {
         service.customSaveContest(optionId,contestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("update/{id}/{optionId}")
+    public ResponseEntity<ContestDto> updateContest( @PathVariable Long id, @RequestBody ContestDto contestDto,@PathVariable Long optionId){
+
+        return ResponseEntity.ok(service.updateContest(id,contestDto,optionId));
+
+    }
+    @PatchMapping("/unassign-project-to-contest/{contestDtoID}/{projectId}")
+    public ResponseEntity<Void> unAssignProjectToContest(@PathVariable  Long contestDtoID,@PathVariable Long projectId){
+        service.unAssignProjectToContest(contestDtoID,projectId);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/getWinnerByContest/{contestID}")
+    public ResponseEntity<ProjectsDto> getProjectWinnerByContest(@PathVariable Long contestID){
+        return ResponseEntity.ok(service.getProjectWinnerByContest(contestID));
     }
 }

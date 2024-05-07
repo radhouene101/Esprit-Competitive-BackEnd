@@ -84,9 +84,9 @@ public class ProjectsController {
     public ResponseEntity<List<ProjectsDto>> getProjectsByContest(Long contestId){
         return ResponseEntity.ok(service.getProjectsByContest(contestId));
     }
-    @PatchMapping("/updateProject/{projectId}")
-    public ResponseEntity<ProjectsDto> updateProject(@PathVariable Long projectId, @RequestBody ProjectsDto projectsDto){
-       return ResponseEntity.ok(service.updateProject(projectId,projectsDto));
+    @PatchMapping("/updateProject/{projectId}/{optionId}/{categoryId}")
+    public ResponseEntity<ProjectsDto> updateProject(@PathVariable Long projectId,@PathVariable Long optionId,@PathVariable Long categoryId, @RequestBody ProjectsDto projectsDto){
+       return ResponseEntity.ok(service.updateProject(projectId,optionId,categoryId,projectsDto));
     }
     @PatchMapping("voteUp/{projectId}/{userId}")
     public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){

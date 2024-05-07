@@ -21,7 +21,7 @@ public interface IProjectsService extends AbstractService<ProjectsDto> {
     List<ProjectsDto> getAllByOptionSpeciality(String option);
     List<ProjectsDto> getAllByNiveau(TypeNiveau niveau);
     List<ProjectsDto> getProjectsByContest(Long contestId);
-    ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto);
+    ProjectsDto updateProject(Long projectId,Long optionId,Long categoryId,ProjectsDto projectsDto);
     Boolean voteUp(Long projectId,Long userId);
     //ProjectsDto saveWithImage(ProjectsDto dto, MultipartFile file) throws IOException;
 }

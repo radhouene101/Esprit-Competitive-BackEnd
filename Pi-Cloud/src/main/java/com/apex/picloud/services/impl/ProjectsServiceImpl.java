@@ -153,19 +153,22 @@ public class ProjectsServiceImpl implements IProjectsService {
                 .map(ProjectsDto::fromEntity)
                 .collect(Collectors.toList());
     }
-    public ProjectsDto updateProject(Long projectId,ProjectsDto projectsDto){
+    public ProjectsDto updateProject(Long projectId,Long optionId,Long categoryId,ProjectsDto projectsDto){
+        Option option = optionRepository.findById(optionId).get();
+        CategoryProjects categoryProjects = categoryProjectsRepository.findById(categoryId).get();
         Projects p = repository.findById(projectId).get();
-
-                p.setId(projectId);
                 p.setDate(projectsDto.getDate());
+                p.setCategory(categoryProjects);
                 p.setName(projectsDto.getName());
                 p.setGroupName(projectsDto.getGroupName());
                 p.setCoach(projectsDto.getCoach());
                 p.setClasse(projectsDto.getClasse());
                 p.setNiveau(projectsDto.getNiveau());
-                p.setOptionSpeciality(projectsDto.getOptionSpeciality());
+                p.setOptionSpeciality(option);
                 p.setWinner(projectsDto.getWinner());
                 p.setScolarYear(projectsDto.getScolarYear());
+                p.setImageUrl(projectsDto.getImageUrl());
+                p.setVideoUrl(projectsDto.getVideoUrl());
 
 
         repository.save(p);
