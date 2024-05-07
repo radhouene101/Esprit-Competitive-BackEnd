@@ -2,7 +2,6 @@ package com.apex.picloud.handlers;
 
 import com.apex.picloud.exceptions.ObjectValidationException;
 import com.apex.picloud.exceptions.OperationNonPremittedExceptions;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -80,12 +79,4 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(representation);
     }
-    @ExceptionHandler(EntityExistsException.class)
-    public ResponseEntity<ExceptionRepresentation> handlebadEntityExistsException(EntityExistsException e){
-        ExceptionRepresentation representation = ExceptionRepresentation.builder()
-                .errorMessage("user with the provided email already exist")
-                .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(representation);
-    }
-
 }
