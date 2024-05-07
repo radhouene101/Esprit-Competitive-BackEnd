@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.repository.cdi.Eager;
 
 import java.util.Date;
 import java.util.Set;
@@ -53,7 +54,7 @@ public class Projects  {
     @ManyToOne(optional = true)
     @JoinColumn(name = "contest_id",nullable = true)
     private Contest contest;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> voters;
     private String videoUrl;
     private String imageUrl;

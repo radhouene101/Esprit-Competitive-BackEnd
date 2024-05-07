@@ -3,13 +3,13 @@ package com.apex.picloud.utils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 @Component
 
 public class EmailUtil {
+
     @Autowired
     private JavaMailSender javaMailSender;
     public void sendSetPasswordEmail(String email) throws MessagingException {
@@ -42,4 +42,27 @@ public class EmailUtil {
 
         javaMailSender.send(mimeMessage);
     }
+
+
+    public  void sendEmailToVoters(String email, String userName, String winnerName, String classe) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Winner announcement");
+        String emailContent = """
+            <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                <h1 style="color: #333; text-align: center;">Congratulations, Competitors!</h1>
+                <p>Hello %s,</p>
+                <p>We are thrilled to announce that %s is the winner of our contest.</p>
+                <p>from grade %s.</p>
+                <p>Thank you for your participation and support.</p>
+                <p>Best regards,<br>%s Team</p>
+            </div>
+            """.formatted(userName, winnerName, classe, "ESPRIT COMPETITIVE");
+
+        mimeMessageHelper.setText(emailContent, true);
+
+        javaMailSender.send(mimeMessage);
+    }
+
 }

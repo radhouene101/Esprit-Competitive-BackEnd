@@ -10,7 +10,9 @@ import com.apex.picloud.repositories.ContestRepository;
 import com.apex.picloud.repositories.OptionRepository;
 import com.apex.picloud.repositories.ProjectsRepository;
 import com.apex.picloud.services.IContestService;
+import com.apex.picloud.utils.EmailUtil;
 import com.apex.picloud.validator.ObjectsValidator;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -19,10 +21,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +50,9 @@ public class ContestServiceImpl implements IContestService {
     private final ObjectsValidator<ContestDto> validator;
 
     @Autowired
+    private EmailUtil email;
+
+    @Autowired
     private final ProjectsServiceImpl projectsService;
     @Autowired
     private ContestRepository contestRepository;
@@ -49,6 +63,9 @@ public class ContestServiceImpl implements IContestService {
         validator.validate(dto);
         if(dto.getProjects()==null){
             dto.setProjects(new ArrayList<>());
+        }
+        if (dto.getDeadline().isBefore(LocalDateTime.now())) {
+            dto.setAllowVote(true);
         }
         Contest contest = ContestDto.toEntity(dto);
 
@@ -160,25 +177,52 @@ public class ContestServiceImpl implements IContestService {
 
     public void  stopContestAndAssignWinner(){
         List<Contest> contests = contestRepository.findAll();
+
         for (Contest c : contests){
-            if(c.getDeadline()!= null && LocalDateTime.now().isAfter(c.getDeadline())){
+            if(c.getDeadline()!= null && LocalDateTime.now().isAfter(c.getDeadline()) && c.getAllowVote()){
                 c.setAllowVote(false);
+                updateContest(c.getId(),ContestDto.fromEntity(c),c.getOption().getId());
+
                 List<ProjectsDto> projectsDtoList = projectsService.getProjectsByContest(c.getId());
                 Integer minValue=Integer.MIN_VALUE;
-                Long winnerId =projectsDtoList.get(1).getId();
+                Long winnerId =projectsDtoList.get(0).getId();
+                //searching for winner
                 for (ProjectsDto p : projectsDtoList){
                     if (p.getNumberOfVotes()>minValue){
                         winnerId=p.getId();
+                    }
+                    if(p.getVoters()!=null){
+                    p.getVoters().forEach(u->{
+                        try {
+                            email.sendEmailToVoters(u.getEmail(),u.getUsername(),"winner will be announced soon", p.getContest().getName());
+                        } catch (MessagingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                     }
                 }
                 //settting the winenr
                 Projects projects = projectsRepository.findById(winnerId).orElseThrow(()-> new EntityNotFoundException("project not found"));
                 projects.setWinner(true);
+                contestRepository.save(c);
+                //sending mail to votes
+                for (ProjectsDto p : projectsDtoList){
+                    p.getVoters().forEach(u->{
+                        try {
+                            email.sendEmailToVoters(u.getEmail(),u.getUsername(),p.getGroupName(),p.getClasse());
+                        } catch (MessagingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
 
+            } else {
+              c.setAllowVote(true);
+                contestRepository.save(c);
             }
         }
     }
-    @Scheduled(fixedDelay = 60000)
+    //@Scheduled(fixedDelay = 60000)
     public void scheduleContestDeadline(){
         stopContestAndAssignWinner();
     }
@@ -210,4 +254,28 @@ public class ContestServiceImpl implements IContestService {
         }
         return null;
     }
+
+
+    public void uploadContestImage(Long contestId, MultipartFile file) throws IOException {
+        Optional<Contest> contestget = contestRepository.findById(contestId);
+        if (contestget.isPresent()) {
+            Contest contest = contestget.get();
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            Path uploadDir = Paths.get("C:\\Users\\rberr\\OneDrive\\Documents\\PI-Arc-spring-angular\\Front-EndMerge\\Angular-Chat-App-FrontEnd\\src\\assets");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadDir.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                contest.setImage("/images/" + fileName);
+                contestRepository.save(contest);
+            } catch (IOException e) {
+                throw new IOException("Could not save image: " + fileName, e);
+            }
+        } else {
+            throw new IllegalArgumentException("Event with ID " + contestId + " not found");
+        }
+    }
+
 }

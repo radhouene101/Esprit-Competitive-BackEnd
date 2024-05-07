@@ -23,5 +23,5 @@ public interface IProjectsService extends AbstractService<ProjectsDto> {
     List<ProjectsDto> getProjectsByContest(Long contestId);
     ProjectsDto updateProject(Long projectId,Long optionId,Long categoryId,ProjectsDto projectsDto);
     Boolean voteUp(Long projectId,Long userId);
-    //ProjectsDto saveWithImage(ProjectsDto dto, MultipartFile file) throws IOException;
+    void uploadProjectImage(Long projectid, MultipartFile file) throws IOException;
 }

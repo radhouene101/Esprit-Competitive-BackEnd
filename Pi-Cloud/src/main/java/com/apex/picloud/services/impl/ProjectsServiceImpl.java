@@ -1,10 +1,7 @@
 package com.apex.picloud.services.impl;
 
 import com.apex.picloud.dtos.radhouene.ProjectsDto;
-import com.apex.picloud.entities.CategoryProjects;
-import com.apex.picloud.entities.Option;
-import com.apex.picloud.entities.Projects;
-import com.apex.picloud.entities.TypeNiveau;
+import com.apex.picloud.entities.*;
 import com.apex.picloud.models.User;
 import com.apex.picloud.repositories.CategoryProjectsRepository;
 import com.apex.picloud.repositories.OptionRepository;
@@ -28,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -186,6 +184,28 @@ public class ProjectsServiceImpl implements IProjectsService {
         projects.setNumberOfVotes(projects.getNumberOfVotes()+1);
         repository.save(projects);
         return true;
+    }
+
+    public void uploadProjectImage(Long projectid, MultipartFile file) throws IOException {
+        Optional<Projects> projectget = repository.findById(projectid);
+        if (projectget.isPresent()) {
+            Projects projects = projectget.get();
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            Path uploadDir = Paths.get("C:\\Users\\rberr\\OneDrive\\Documents\\PI-Arc-spring-angular\\Front-EndMerge\\Angular-Chat-App-FrontEnd\\src\\assets");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadDir.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                projects.setImageUrl("/images/" + fileName);
+                repository.save(projects);
+            } catch (IOException e) {
+                throw new IOException("Could not save image: " + fileName, e);
+            }
+        } else {
+            throw new IllegalArgumentException("Event with ID " + projectid + " not found");
+        }
     }
 
     }

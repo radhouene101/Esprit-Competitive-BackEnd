@@ -5,6 +5,7 @@ import com.apex.picloud.services.IProjectsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,9 +93,15 @@ public class ProjectsController {
     public ResponseEntity<Boolean> voteUp(@PathVariable Long projectId, @PathVariable Long userId){
         return ResponseEntity.ok(service.voteUp(projectId,userId));
     }
-//    @PostMapping("/save-with-image")
-//    public ResponseEntity<ProjectsDto> saveWithImage(@RequestBody ProjectsDto dto, @RequestParam("file") MultipartFile file) throws IOException {
-//        return ResponseEntity.ok(service.saveWithImage(dto,file));
-//    }
+
+    @PostMapping("add-image-to-project/{projectId}")
+    public ResponseEntity<Void> uploadProjectImage(@PathVariable Long projectId, @RequestParam("file") MultipartFile file) throws IOException {
+        try {
+            service.uploadProjectImage(projectId, file);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
