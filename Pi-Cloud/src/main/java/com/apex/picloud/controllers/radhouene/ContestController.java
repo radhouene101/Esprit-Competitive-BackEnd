@@ -47,7 +47,7 @@ public class ContestController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/assign-project-to-contest/{contestId}/{projectId}")
+    @PatchMapping("/assign-project-to-contest/{contestDtoID}/{projectId}")
     public  ResponseEntity<Void> assignProjectToContest(@PathVariable Long projectId,@PathVariable  Long contestDtoID){
         service.assignProjectToContest(contestDtoID,projectId);
         return ResponseEntity.ok().build();

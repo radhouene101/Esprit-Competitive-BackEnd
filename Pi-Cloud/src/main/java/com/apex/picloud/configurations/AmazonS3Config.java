@@ -15,7 +15,7 @@ public class AmazonS3Config {
         // Fetch your AWS access key and secret key from application.properties or other secure sources
         String awsAccessKey = ""; // or fetch from environment variable
         String awsSecretKey = ""; // or fetch from environment variable
-        String awsRegion = ""; // e.g., "us-east-1"
+        String awsRegion = "eu-west-3"; // e.g., "us-east-1"
 
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         return AmazonS3ClientBuilder.standard()

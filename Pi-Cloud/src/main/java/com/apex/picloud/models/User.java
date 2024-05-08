@@ -2,6 +2,7 @@ package com.apex.picloud.models;
 
 import com.apex.picloud.entities.Projects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +42,8 @@ public class User implements UserDetails{
      private String otp;
      private LocalDateTime OtpGeneratedTime;
     @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<Projects> listprojects;
     private String phone;
      private int BadWordCount  ;
