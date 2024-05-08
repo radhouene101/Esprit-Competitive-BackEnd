@@ -34,5 +34,4 @@ public class Contest {
     private String image;
     private Boolean allowVote;
 
-
 }

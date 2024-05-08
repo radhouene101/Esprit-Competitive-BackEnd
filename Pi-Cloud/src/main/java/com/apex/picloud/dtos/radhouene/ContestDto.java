@@ -59,7 +59,7 @@ public class ContestDto {
                 .niveau(contest.getNiveau())
                 .deadline(contest.getDeadline())
                 .image(contest.getImage())
-                .allowVote(contest.allowVote)
+                .allowVote(contest.getAllowVote())
                 .build();
     }
 

@@ -15,13 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import io.jsonwebtoken.security.Keys;
+import com.apex.picloud.models.User;
+import com.apex.picloud.repositories.UserRepository;
 
 @Component
 public class JwtUtil {
-
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
     @Autowired
-    private  UserRepository repository;
+    public UserRepository repository;
+    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -54,11 +57,8 @@ public class JwtUtil {
     }
 
     public String generateToken(String userName){
-        //here we extracted the connected User , username is the email
         final User user = repository.findByEmail(userName).get();
-
         Map<String,Object> claims=new HashMap<>();
-        //here set claims that you want to extract from the token;
         claims.put("userId",user.getId());
         claims.put("phoneNumber",user.getPhone());
         claims.put("rolesList",user.getRoles());
@@ -71,13 +71,12 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
     private Key getSignKey() {
-        byte[] keyBytes= Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

@@ -1,10 +1,7 @@
 package com.apex.picloud.models;
 
 import com.apex.picloud.entities.Projects;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +12,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name ="users",uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -40,27 +41,34 @@ public class User implements UserDetails{
      private String otp;
      private LocalDateTime OtpGeneratedTime;
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
-    @JsonIgnore
     private List<Projects> listprojects;
+    private String phone;
+     private int BadWordCount  ;
+     private Boolean Banned = false;
+     private Duration BanDuration ;
+    private LocalDateTime banStartTime;
+    @OneToMany
+    private List<Forum> forums ;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post posts;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    private String phone;
+
     @Enumerated(EnumType.STRING)
     private Status status;
-
-
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
-
-
 
     @Override
     public String getUsername() {
@@ -86,8 +94,4 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return false;
     }
-
-
-
-
 }
