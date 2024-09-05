@@ -13,8 +13,8 @@ public class AmazonS3Config {
     @Bean
     public AmazonS3 amazonS3() {
         // Fetch your AWS access key and secret key from application.properties or other secure sources
-        String awsAccessKey = ""; // or fetch from environment variable
-        String awsSecretKey = ""; // or fetch from environment variable
+        String awsAccessKey = "key"; // or fetch from environment variable
+        String awsSecretKey = "secret"; // or fetch from environment variable
         String awsRegion = "eu-west-3"; // e.g., "us-east-1"
 
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
